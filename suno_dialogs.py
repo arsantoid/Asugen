@@ -826,47 +826,83 @@ async def _generate_one_song(context, song_config: dict, song_index: int, total:
         log_cb("  SKIP: Style tidak terisi")
         return None
 
-    # ── Isi Song Title — v5.45: scroll bawah + JS langsung ────────────
-    # Tidak ada selector hunting, tidak ada More Options, tidak ada wait.
-    # Scroll mentok bawah → JS cari & isi input title seketika.
+    # ── Klik More Options agar Song Title (Optional) muncul ────────────
+    _mo_clicked = False
+    try:
+        for _mo_sel in [
+            "button:has-text('More Options')",
+            "details > summary",
+            "[data-testid*='more-options' i]",
+            "summary",
+        ]:
+            try:
+                _mo = await page.wait_for_selector(_mo_sel, timeout=3000, state="visible")
+                if _mo:
+                    await _mo.click()
+                    await asyncio.sleep(0.5)  # FIX: dipercepat
+                    _mo_clicked = True
+                    log_cb("  OK: More Options dibuka")
+                    break
+            except Exception:
+                continue
+    except Exception:
+        pass
+
+    # ── Isi Song Title (Optional) dari DeepSeek ────────────────────────
     _title_filled = False
     try:
-        await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-        await asyncio.sleep(0.3)
+        # Tambah jeda setelah More Options agar field benar-benar visible
+        if _mo_clicked:
+            await asyncio.sleep(0.3)  # FIX: dipercepat
 
-        _js_title = await page.evaluate(r"""(titleVal) => {
-            const kws = ['title', 'song title', 'optional', 'song name'];
-            const inputs = Array.from(document.querySelectorAll('input[type="text"], input:not([type])'));
-            for (const inp of inputs) {
-                const ph  = (inp.placeholder || '').toLowerCase();
-                const lbl = (inp.getAttribute('aria-label') || '').toLowerCase();
-                const nm  = (inp.name || '').toLowerCase();
-                const hit = kws.some(k => ph.includes(k) || lbl.includes(k) || nm.includes(k));
-                if (hit) {
-                    inp.scrollIntoView({behavior:'instant', block:'center'});
-                    inp.focus();
-                    inp.click();
-                    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-                        window.HTMLInputElement.prototype, 'value').set;
-                    nativeInputValueSetter.call(inp, titleVal);
-                    inp.dispatchEvent(new Event('input', {bubbles:true}));
-                    inp.dispatchEvent(new Event('change', {bubbles:true}));
-                    return inp.value;
-                }
-            }
-            return null;
-        }""", title)
+        for _tsel in [
+            "input[placeholder*='Song Title' i]",
+            "input[placeholder*='Title' i]",
+            "input[placeholder*='Optional' i]",
+            "input[placeholder*='Song name' i]",
+            "input[aria-label*='title' i]",
+            "input[data-testid*='title' i]",
+        ]:
+            try:
+                _tinp = await page.wait_for_selector(_tsel, timeout=3000, state="visible")
+                if _tinp:
+                    await _tinp.scroll_into_view_if_needed()
+                    await asyncio.sleep(0.3)
+                    await _tinp.click()
+                    await asyncio.sleep(0.2)
+                    await _tinp.triple_click()
+                    await js_set_value(_tinp, title)
+                    _title_filled = True
+                    log_cb(f"  OK: Title = {title}")
+                    break
+            except Exception:
+                continue
 
-        if _js_title:
-            _title_filled = True
-            log_cb(f"  OK: Title = {_js_title}")
-        else:
-            log_cb(f"  INFO: Title input tidak ditemukan — Suno auto-generate judul")
+        # Fallback: scan semua input cari yang punya placeholder title/optional
+        if not _title_filled:
+            for inp in await page.query_selector_all("input"):
+                ph  = (await inp.get_attribute("placeholder") or "").lower()
+                lbl = (await inp.get_attribute("aria-label") or "").lower()
+                nm  = (await inp.get_attribute("name") or "").lower()
+                if any(kw in x for kw in ["title","song","optional"] for x in [ph, lbl, nm]):
+                    try:
+                        await inp.scroll_into_view_if_needed()
+                        await asyncio.sleep(0.2)
+                        await inp.click()
+                        await js_set_value(inp, title)
+                        _title_filled = True
+                        log_cb(f"  OK: Title (fallback scan) = {title}")
+                        break
+                    except Exception:
+                        continue
+
+        if not _title_filled:
+            log_cb(f"  INFO: Song Title input tidak ditemukan — Suno auto-generate judul")
             log_cb(f"  INFO: Nama FILE tetap pakai judul DeepSeek: {title}")
     except Exception as _te:
-        log_cb(f"  INFO: Title skip: {_te.__class__.__name__}")
+        log_cb(f"  INFO: Title skip (field belum muncul): {_te.__class__.__name__}")
 
-    await asyncio.sleep(0.3)
+    await asyncio.sleep(0.8)
     if is_stop_requested():
         return None
 
@@ -3266,331 +3302,3 @@ class RuntimeSettingsDialog(tk.Toplevel):
 # ------------------------------------------------------------------
 # Main App
 # ------------------------------------------------------------------
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-#  PROMPT MANAGER DIALOG  (v5.38+)
-# ─────────────────────────────────────────────────────────────────────────────
-class PromptManagerDialog(tk.Toplevel):
-    """Dialog untuk membuat dan mengelola multiple custom prompts."""
-
-    _EXAMPLE_TEMPLATE = (
-        "You are a professional Smooth R&B and Chill Lofi songwriter.\n"
-        "Your task is to write complete song lyrics for song {index} of {total}.\n\n"
-        "━━━━━━━━━━━ EDIT BAGIAN INI SESUAI KEBUTUHAN ━━━━━━━━━━━\n\n"
-        "GENRE & STYLE: Smooth R&B, Chill Lofi, late-night vibes\n"
-        "MOOD: Relaxing, cozy, soulful, peaceful\n\n"
-        "LANGUAGE RULES:\n"
-        "- Use simple, direct English easy to understand for ages 15-50\n"
-        "- Be literal but soulful, use R&B/Lofi vernacular naturally\n"
-        "- e.g. \"smooth flow\", \"late night\", \"chill\", \"vibe\", \"unwind\"\n\n"
-        "TONE: Influenced by smooth 90s/00s R&B, modern Lofi hip-hop, chillhop\n"
-        "PERFECT FOR: studying, midnight relaxation, late drives, rainy nights\n\n"
-        "DESCRIPTION / TOPIC: {description}\n"
-        "MUSIC STYLE TAGS: {style}\n\n"
-        "━━━━━━━━━━━ JANGAN UBAH BAGIAN INI ━━━━━━━━━━━━━━━━━\n\n"
-        "SONG STRUCTURE (mandatory):\n"
-        "[Instrumental Intro]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n"
-        "[Instrumental Bridge]\n[Chorus]\n[Outro]\n\n"
-        "AVAILABLE SUNO SECTION KEYWORDS (always use in square brackets [ ]):\n"
-        "Structure : [Intro] [Verse 1] [Verse 2] [Pre-Chorus] [Chorus] [Post-Chorus] [Bridge] [Hook] [Outro]\n"
-        "Instrument: [Instrumental Intro] [Instrumental Bridge] [Beat Drop] [Guitar Solo] [Piano Solo] [Sax Solo]\n"
-        "Vocal     : [Ad-libs] [Vocal Harmony] [Whisper] [Vocal Fade]\n"
-        "Ambiance  : [Fade In] [Fade Out] [Build Up] [Breakdown] [Vinyl Crackle] [Rain Ambience]\n\n"
-        "NEGATIVE KEYWORDS (DO NOT include these in lyrics):\n"
-        "Themes  : violence, drugs, explicit content, dark depression, anger, hate\n"
-        "Words   : scream, shout, fight, kill, die, curse words, explicit slang\n"
-        "Style   : fast rap, hard rock energy, aggressive tone, distorted vocals\n"
-        "Structure: no talking sections, no spoken word, no rap freestyle breaks\n\n"
-        "RULES:\n"
-        "- ALWAYS provide TWO different creative song titles (title_b MUST NOT be empty)\n"
-        "- ALWAYS provide TWO different song titles (title_a and title_b MUST be different)\n"
-        "- Write UNIQUE lyrics different from any other song in this session\n"
-        "- MAXIMUM 2000 characters of lyrics. Keep it concise but complete\n"
-        "- Use square brackets [] for ALL section tags and music directions\n"
-        "- NEVER use parentheses () anywhere in lyrics\n"
-        "- Music directions on their OWN line: [Soft Rhodes piano, vinyl crackle]\n\n"
-        "Output format (plain text, no JSON, no markdown, no explanation):\n"
-        "TITLE_A: First Creative Title\n"
-        "TITLE_B: Second Creative Title\n"
-        "LYRICS:\n"
-        "[Verse 1]\n"
-        "line1\n"
-        "line2\n"
-        "[Chorus]\n"
-        "chorus line"
-    )
-
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.title("✍ Prompt Manager")
-        self.geometry("1000x680")
-        self.minsize(800, 500)
-        self.transient(parent)
-        self.grab_set()
-
-        self._cfg   = self._load()
-        self._dirty = False
-        self._cur_idx = 0
-
-        self._build_ui()
-        self._refresh_list()
-        if self._prompts():
-            self._select(0)
-        self._apply_mode_ui()
-
-    # ── helpers ──────────────────────────────────────────
-    def _prompts(self):
-        return self._cfg.setdefault("prompts", [])
-
-    def _load(self):
-        try:
-            import os, json as _j
-            p = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                             "suno_profile_manager", "prompt_config.json")
-            if os.path.exists(p):
-                with open(p, encoding="utf-8") as f:
-                    d = _j.load(f)
-                if isinstance(d, dict) and "prompts" in d:
-                    return d
-        except Exception:
-            pass
-        return {"active_mode": "default", "active_index": 0, "prompts": []}
-
-    def _save(self):
-        try:
-            import os, json as _j
-            p = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                             "suno_profile_manager", "prompt_config.json")
-            os.makedirs(os.path.dirname(p), exist_ok=True)
-            with open(p, "w", encoding="utf-8") as f:
-                _j.dump(self._cfg, f, ensure_ascii=False, indent=2)
-            return True
-        except Exception as e:
-            messagebox.showerror("Error", f"Gagal simpan: {e}", parent=self)
-            return False
-
-    # ── UI builder ───────────────────────────────────────
-    def _build_ui(self):
-        # Mode bar
-        mode_fr = ttk.Frame(self)
-        mode_fr.pack(fill="x", padx=10, pady=(10, 0))
-        ttk.Label(mode_fr, text="Mode:").pack(side="left")
-        self._mode_var = tk.StringVar(value=self._cfg.get("active_mode", "default"))
-        ttk.Radiobutton(mode_fr, text="● Default (genre otomatis)",
-                        variable=self._mode_var, value="default",
-                        command=self._on_mode_change).pack(side="left", padx=8)
-        ttk.Radiobutton(mode_fr, text="✍ Custom Prompt",
-                        variable=self._mode_var, value="custom",
-                        command=self._on_mode_change).pack(side="left", padx=8)
-
-        ttk.Separator(self, orient="horizontal").pack(fill="x", padx=10, pady=6)
-
-        # Main pane
-        pane = ttk.PanedWindow(self, orient="horizontal")
-        pane.pack(fill="both", expand=True, padx=10, pady=0)
-
-        # LEFT — daftar prompt
-        left = ttk.Frame(pane, width=200)
-        pane.add(left, weight=1)
-
-        ttk.Label(left, text="Daftar Prompt:", font=("", 9, "bold")).pack(anchor="w", pady=(0,4))
-
-        lb_fr = ttk.Frame(left)
-        lb_fr.pack(fill="both", expand=True)
-        self._lb = tk.Listbox(lb_fr, selectmode="single", activestyle="none",
-                              font=("", 9), relief="flat", bd=1,
-                              highlightthickness=1)
-        sb = ttk.Scrollbar(lb_fr, orient="vertical", command=self._lb.yview)
-        self._lb.configure(yscrollcommand=sb.set)
-        self._lb.pack(side="left", fill="both", expand=True)
-        sb.pack(side="right", fill="y")
-        self._lb.bind("<<ListboxSelect>>", self._on_list_select)
-
-        btn_fr = ttk.Frame(left)
-        btn_fr.pack(fill="x", pady=4)
-        ttk.Button(btn_fr, text="➕", width=3, command=self._add_prompt).pack(side="left")
-        ttk.Button(btn_fr, text="🗑", width=3, command=self._del_prompt).pack(side="left", padx=2)
-        ttk.Button(btn_fr, text="⬆", width=3, command=lambda: self._move(-1)).pack(side="left")
-        ttk.Button(btn_fr, text="⬇", width=3, command=lambda: self._move(1)).pack(side="left", padx=2)
-
-        # RIGHT — editor
-        right = ttk.Frame(pane)
-        pane.add(right, weight=4)
-
-        # Nama
-        nf = ttk.Frame(right)
-        nf.pack(fill="x", pady=(0,6))
-        ttk.Label(nf, text="Nama Prompt:").pack(side="left")
-        self._name_var = tk.StringVar()
-        self._name_entry = ttk.Entry(nf, textvariable=self._name_var, font=("", 10))
-        self._name_entry.pack(side="left", fill="x", expand=True, padx=(6,0))
-
-        # System prompt
-        ttk.Label(right, text="System Prompt (opsional — biarkan kosong jika tidak perlu):").pack(anchor="w")
-        sys_fr = ttk.Frame(right)
-        sys_fr.pack(fill="x", pady=(2,8))
-        self._sys_txt = tk.Text(sys_fr, height=3, font=("Consolas", 9), wrap="word",
-                                relief="solid", bd=1)
-        sys_sb = ttk.Scrollbar(sys_fr, orient="vertical", command=self._sys_txt.yview)
-        self._sys_txt.configure(yscrollcommand=sys_sb.set)
-        self._sys_txt.pack(side="left", fill="x", expand=True)
-        sys_sb.pack(side="right", fill="y")
-
-        # User template
-        tpl_lbl_fr = ttk.Frame(right)
-        tpl_lbl_fr.pack(fill="x")
-        ttk.Label(tpl_lbl_fr, text="User Template:", font=("", 9, "bold")).pack(side="left")
-        ttk.Label(tpl_lbl_fr,
-                  text="  variabel: {description}  {style}  {index}  {total}",
-                  foreground="gray", font=("", 8)).pack(side="left")
-
-        tpl_fr = ttk.Frame(right)
-        tpl_fr.pack(fill="both", expand=True, pady=(2,6))
-        self._tpl_txt = tk.Text(tpl_fr, font=("Consolas", 9), wrap="word",
-                                relief="solid", bd=1, undo=True)
-        tpl_sb = ttk.Scrollbar(tpl_fr, orient="vertical", command=self._tpl_txt.yview)
-        self._tpl_txt.configure(yscrollcommand=tpl_sb.set)
-        self._tpl_txt.pack(side="left", fill="both", expand=True)
-        tpl_sb.pack(side="right", fill="y")
-
-        # Tombol bawah
-        bot = ttk.Frame(right)
-        bot.pack(fill="x")
-        ttk.Button(bot, text="📋 Isi Contoh Prompt",
-                   command=self._fill_example).pack(side="left")
-        ttk.Button(bot, text="✅ Jadikan Aktif",
-                   command=self._set_active).pack(side="left", padx=6)
-
-        # Footer
-        foot = ttk.Frame(self)
-        foot.pack(fill="x", padx=10, pady=8)
-        ttk.Button(foot, text="💾 Simpan Semua", command=self._save_all).pack(side="left")
-        ttk.Button(foot, text="Tutup", command=self._on_close).pack(side="right")
-        self._status_lbl = ttk.Label(foot, text="", foreground="green")
-        self._status_lbl.pack(side="left", padx=12)
-
-    # ── actions ──────────────────────────────────────────
-    def _refresh_list(self):
-        self._lb.delete(0, "end")
-        ai = self._cfg.get("active_index", 0)
-        mode = self._cfg.get("active_mode", "default")
-        for i, p in enumerate(self._prompts()):
-            marker = " ▶" if (mode == "custom" and i == ai) else ""
-            self._lb.insert("end", f"{p.get('name','Prompt '+str(i+1))}{marker}")
-
-    def _select(self, idx):
-        ps = self._prompts()
-        if not ps or idx < 0 or idx >= len(ps):
-            return
-        self._flush_current()
-        self._cur_idx = idx
-        self._lb.selection_clear(0, "end")
-        self._lb.selection_set(idx)
-        self._lb.see(idx)
-        p = ps[idx]
-        self._name_var.set(p.get("name", ""))
-        self._sys_txt.delete("1.0", "end")
-        self._sys_txt.insert("1.0", p.get("system_prompt", ""))
-        self._tpl_txt.delete("1.0", "end")
-        self._tpl_txt.insert("1.0", p.get("user_template", ""))
-
-    def _flush_current(self):
-        ps = self._prompts()
-        if not ps or self._cur_idx >= len(ps):
-            return
-        ps[self._cur_idx]["name"]          = self._name_var.get().strip() or f"Prompt {self._cur_idx+1}"
-        ps[self._cur_idx]["system_prompt"] = self._sys_txt.get("1.0", "end-1c").strip()
-        ps[self._cur_idx]["user_template"] = self._tpl_txt.get("1.0", "end-1c")
-
-    def _on_list_select(self, _e=None):
-        sel = self._lb.curselection()
-        if sel:
-            self._select(sel[0])
-
-    def _add_prompt(self):
-        self._flush_current()
-        n = len(self._prompts()) + 1
-        self._prompts().append({"name": f"Custom Prompt {n}", "system_prompt": "", "user_template": ""})
-        self._refresh_list()
-        self._select(len(self._prompts()) - 1)
-
-    def _del_prompt(self):
-        ps = self._prompts()
-        if not ps:
-            return
-        self._flush_current()
-        if not messagebox.askyesno("Hapus", f"Hapus '{ps[self._cur_idx].get('name')}'?", parent=self):
-            return
-        ps.pop(self._cur_idx)
-        self._cur_idx = max(0, self._cur_idx - 1)
-        self._refresh_list()
-        if ps:
-            self._select(self._cur_idx)
-        else:
-            self._name_var.set("")
-            self._sys_txt.delete("1.0", "end")
-            self._tpl_txt.delete("1.0", "end")
-
-    def _move(self, direction):
-        ps = self._prompts()
-        i  = self._cur_idx
-        j  = i + direction
-        if j < 0 or j >= len(ps):
-            return
-        self._flush_current()
-        ps[i], ps[j] = ps[j], ps[i]
-        if self._cfg.get("active_index") == i:
-            self._cfg["active_index"] = j
-        elif self._cfg.get("active_index") == j:
-            self._cfg["active_index"] = i
-        self._cur_idx = j
-        self._refresh_list()
-        self._select(j)
-
-    def _fill_example(self):
-        if messagebox.askyesno("Isi Contoh",
-                               "Ganti template saat ini dengan contoh R&B/Lofi?", parent=self):
-            self._tpl_txt.delete("1.0", "end")
-            self._tpl_txt.insert("1.0", self._EXAMPLE_TEMPLATE)
-
-    def _set_active(self):
-        self._flush_current()
-        self._cfg["active_mode"]  = "custom"
-        self._cfg["active_index"] = self._cur_idx
-        self._mode_var.set("custom")
-        self._apply_mode_ui()
-        self._refresh_list()
-        self._status_lbl.config(
-            text=f"✅ Aktif: {self._prompts()[self._cur_idx].get('name','?')}")
-        self._save()
-
-    def _on_mode_change(self):
-        self._cfg["active_mode"] = self._mode_var.get()
-        self._apply_mode_ui()
-        self._refresh_list()
-        self._save()
-
-    def _apply_mode_ui(self):
-        is_custom = self._mode_var.get() == "custom"
-        state = "normal" if is_custom else "disabled"
-        for w in [self._name_entry, self._sys_txt, self._tpl_txt, self._lb]:
-            try:
-                w.config(state=state)
-            except Exception:
-                pass
-
-    def _save_all(self):
-        self._flush_current()
-        self._cfg["active_mode"] = self._mode_var.get()
-        if self._save():
-            self._status_lbl.config(text="✅ Tersimpan!")
-            self._refresh_list()
-            self.after(2000, lambda: self._status_lbl.config(text=""))
-
-    def _on_close(self):
-        self._flush_current()
-        self._cfg["active_mode"] = self._mode_var.get()
-        self._save()
-        self.destroy()
-

@@ -372,7 +372,12 @@ def _parse_deepseek_response(raw):
             if su.startswith("TITLE_A:"):   title_a = s[8:].strip().strip("\"'")
             elif su.startswith("TITLE_B:"): title_b = s[8:].strip().strip("\"'")
             elif su.startswith("TITLE:") and not title_a: title_a = s[6:].strip().strip("\"'")
-            elif su.startswith("STYLE:"):   style_out = s[6:].strip().strip("\"'")
+            elif su.startswith("STYLE:"):
+                _rs = s[6:].strip().strip("\"'")
+                # Sanitize: buang URL (http/https) dari STYLE field
+                import re as _re2
+                _rs = _re2.sub(r"\[?https?://[^\]\s)]+\]?(?:\([^)]*\))?", "", _rs).strip()
+                style_out = _rs
             elif su.startswith("LYRICS:") or su == "LYRICS": in_lyrics = True
         else:
             lyrics_lines.append(line)
@@ -385,8 +390,6 @@ def _parse_deepseek_response(raw):
         title_b = (" ".join(w[1:] + [w[0]]) if len(w) >= 2 else title_a + " II")
     return {"title": title_a, "title_a": title_a, "title_b": title_b,
             "style": style_out, "lyrics": lyrics}
-
-
 async def _deepseek_web_prepare_songs(context, config, log_cb, timeout_sec=120):
     import asyncio
     description  = config.get("description", "")
@@ -494,7 +497,8 @@ async def _deepseek_web_prepare_songs(context, config, log_cb, timeout_sec=120):
             _w = title_a.split()
             title_b = (" ".join(_w[1:] + [_w[0]]) if len(_w) >= 2 else title_a + " II")
         # Style = PERSIS input user, BUKAN dari DeepSeek response
-        style  = description.strip().rstrip(".,").strip()
+        # Style: pakai style_input dari user, fallback ke description
+        style  = (style_input or description).strip().rstrip(".,").strip()
         lyrics = "" if instrumental else p.get("lyrics", "")
         if not instrumental and len(lyrics) < MIN_LYRICS_CHARS:
             log_cb(f"[DS-WEB] Lagu {i}: lirik {len(lyrics)} char < {MIN_LYRICS_CHARS} — terlalu pendek, tetap dipakai.")

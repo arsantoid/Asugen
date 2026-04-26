@@ -135,7 +135,6 @@ class AppV2(tk.Tk):
 
         ttk.Separator(right).pack(fill="x", padx=6, pady=6)
         ttk.Button(right, text="⚙️ AI Settings", command=self.open_ai_settings, width=24).pack(padx=10, pady=3, fill="x")
-        ttk.Button(right, text="✍ Prompt Manager", command=self.open_prompt_manager, width=24).pack(padx=10, pady=3, fill="x")
         ttk.Button(right, text="⏱ Runtime Settings", command=self.open_runtime_settings, width=24).pack(padx=10, pady=3, fill="x")
         ttk.Button(right, text="Toggle Premium", command=self.toggle_premium, width=24).pack(padx=10, pady=3, fill="x")
 
@@ -924,12 +923,6 @@ class AppV2(tk.Tk):
 
 if __name__ == "__main__":
     app = AppV2()
-    def open_prompt_manager(self):
-        """Buka Prompt Manager Dialog."""
-        from suno_dialogs import PromptManagerDialog
-        PromptManagerDialog(self)
-
-
     def _on_close():
         try:
             if getattr(app, "_log_file", None):

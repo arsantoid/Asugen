@@ -1,1797 +1,977 @@
 {
   "worship": {
-    "keywords": [
-      "worship",
-      "gospel",
-      "praise",
-      "hymn",
-      "christian",
-      "devotional",
-      "ccm",
-      "church"
-    ],
-    "guide": "WORSHIP / GOSPEL music. Lyrics MUST be about praise, adoration of God, spiritual devotion, faith, grace, and divine presence. Use reverent, uplifting language.",
-    "emotions": [
-      "reverent",
-      "uplifted",
-      "peaceful",
-      "grateful",
-      "surrendered"
-    ],
-    "vocal_style": "Clear, emotive, soaring, passionate, with communal choir backups",
+    "keywords": ["worship", "gospel", "praise", "christian"],
+    "guide": "WORSHIP / GOSPEL. Lyrics MUST be about praise, faith, and grace. Use simple, uplifting language.",
+    "emotions": ["reverent", "uplifted", "peaceful", "grateful"],
+    "vocal_style": "Clear, emotive, passionate, choir backups",
     "lyric_structure": "[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Chorus]\n[Outro]",
     "matrix_variables": {
       "characters": [
         "A weary believer seeking rest",
-        "Someone returning to faith after a long time",
-        "A grateful parent praying in the morning",
-        "A congregation singing with one voice",
-        "A person overwhelmed by unexpected grace",
-        "A new believer still learning what faith means",
-        "A pastor crying alone after the last service",
-        "A child asking God why in the middle of the night"
+        "Someone returning to faith",
+        "A grateful person praying",
+        "A congregation singing together"
       ],
       "settings": [
-        "in an empty church pew at dawn",
-        "looking up at a vast, starry night sky",
-        "walking through a quiet valley",
-        "kneeling by a bedside in the dark",
-        "standing on a mountain top feeling small",
-        "in a hospital waiting room holding someone's hand",
-        "standing in the rain outside a church after a long absence",
-        "in a quiet prayer circle with strangers who became family"
+        "in a quiet church at dawn",
+        "looking up at a starry sky",
+        "kneeling in the dark",
+        "standing on a mountain top"
       ],
       "conflicts": [
-        "surrendering control of a difficult situation",
-        "finding peace during the hardest season of life",
-        "trusting a plan they cannot fully see",
-        "letting go of past guilt and shame",
-        "finding the strength to worship in the middle of a storm",
-        "holding onto faith when prayers feel unanswered",
-        "returning to God after years of running away",
-        "reconciling personal pain with belief in divine goodness"
+        "surrendering control",
+        "finding peace in hard times",
+        "trusting a hidden plan",
+        "holding onto faith"
       ],
       "objects_of_focus": [
-        "a single burning candle",
-        "open, empty hands lifted high",
-        "a worn-out Bible on a table",
-        "a wooden cross",
-        "the first ray of morning sunlight",
-        "a rosary worn smooth from years of use",
-        "a hymnal with dog-eared pages and handwritten notes",
-        "morning light breaking through a stained-glass window"
+        "a burning candle",
+        "open hands",
+        "a worn-out Bible",
+        "morning sunlight"
       ]
     },
     "topics": [
-      "Finding grace in the hardest season",
-      "Returning to faith after being away",
-      "Worship that rises from a broken place",
-      "Trusting a plan you cannot fully see",
-      "The peace that passes all understanding"
+      "Finding grace in hard seasons",
+      "Returning to faith",
+      "Trusting the unseen plan",
+      "Unshakable peace"
     ]
   },
   "rnb": {
-    "keywords": [
-      "rnb",
-      "r&b",
-      "soul",
-      "neo soul",
-      "neo-soul",
-      "contemporary r&b"
-    ],
-    "guide": "R&B / SOUL music. Lyrics MUST feel sensual, emotional, and intimate. Themes: deep love, longing, heartbreak, vulnerability. Use smooth, flowing language.",
-    "emotions": [
-      "sensual",
-      "intimate",
-      "vulnerable",
-      "longing",
-      "smooth"
-    ],
-    "vocal_style": "Smooth, melismatic, breathy, emotive runs, falsetto",
-    "lyric_structure": "[Intro]\n[Verse 1]\n[Pre-Chorus]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Outro]",
+    "keywords": ["rnb", "soul", "neo soul", "contemporary r&b"],
+    "guide": "R&B / SOUL. Lyrics MUST feel intimate and vulnerable. Themes: deep love, longing, heartbreak. Use smooth language.",
+    "emotions": ["sensual", "intimate", "vulnerable", "longing"],
+    "vocal_style": "Smooth, melismatic, breathy, emotive runs",
+    "lyric_structure": "[Verse 1]\n[Pre-Chorus]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Outro]",
     "matrix_variables": {
       "characters": [
         "A heartbroken lover who can't move on",
-        "Someone who just realized they fell in love",
-        "Two exes meeting unexpectedly",
         "Someone waiting up late for a text",
-        "A person reflecting on a toxic attraction",
-        "A person texting their ex at midnight",
-        "Someone who loves deeply but fears vulnerability",
-        "A couple in a long-distance relationship"
+        "Two exes meeting unexpectedly",
+        "Someone who fears vulnerability"
       ],
       "settings": [
         "in a dimly lit bedroom at 2 AM",
         "driving through the city in the rain",
         "sitting alone at a crowded lounge",
-        "dancing closely in a quiet kitchen",
-        "looking out a high-rise apartment window",
-        "slow dancing in an empty rooftop at golden hour",
-        "sitting on a bathroom floor after an argument",
-        "lying in bed listening to old voicemails"
+        "dancing closely in a quiet kitchen"
       ],
       "conflicts": [
         "missing a love that felt like home",
-        "letting go of someone they still deeply desire",
-        "drifting apart but afraid to say it out loud",
-        "falling back into old, bad habits",
-        "craving physical touch but needing emotional connection",
-        "wanting to say 'I love you' but not knowing if it's safe",
-        "choosing between staying comfortable or growing apart",
-        "healing alone after giving everything to someone else"
+        "letting go of someone still desired",
+        "falling back into old habits",
+        "craving emotional connection"
       ],
       "objects_of_focus": [
         "a half-empty glass of wine",
-        "a silk shirt left on the floor",
-        "an unread message on a glowing screen",
-        "a lingering scent of perfume",
+        "an unread message on a screen",
         "a tangled bedsheet",
-        "a polaroid photo tucked under a pillow",
-        "a half-burned candle on the nightstand",
-        "a voicemail that was never deleted"
+        "a lingering scent of perfume"
       ]
     },
     "topics": [
-      "The night we almost said goodbye but didn't",
+      "One last text at midnight",
       "Missing someone you're still with",
-      "One last text at 3 AM",
       "The morning after everything changed",
       "Loving someone who won't let you in"
     ]
   },
   "reggae": {
-    "keywords": [
-      "reggae",
-      "dancehall",
-      "ska",
-      "roots",
-      "dub",
-      "rocksteady"
-    ],
-    "guide": "REGGAE music. Lyrics MUST reflect reggae culture: unity, love, peace, Jah spirituality, social justice, liberation, positive vibration. Use laid-back, rhythmic phrasing.",
-    "emotions": [
-      "uplifted",
-      "chill",
-      "righteous",
-      "peaceful",
-      "unified"
-    ],
-    "vocal_style": "Rhythmic, laid-back, expressive, slightly raspy, patois-influenced",
+    "keywords": ["reggae", "dancehall", "roots", "dub"],
+    "guide": "REGGAE. Lyrics MUST reflect unity, peace, love, and positive vibration. Use simple, laid-back phrasing.",
+    "emotions": ["uplifted", "chill", "peaceful", "unified"],
+    "vocal_style": "Rhythmic, laid-back, expressive",
     "lyric_structure": "[Intro]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Instrumental Solo]\n[Outro]",
     "matrix_variables": {
       "characters": [
         "A wise community elder",
-        "A peaceful soul walking through a busy city",
-        "Someone fighting against unfair systems",
-        "A musician bringing people together",
-        "A traveler returning to their island roots",
-        "A Rastaman living simply by the river",
-        "A youth tired of violence choosing peace instead",
-        "A grandmother passing down songs of resistance"
+        "Someone fighting for peace",
+        "A traveler returning to their roots",
+        "A youth choosing love over anger"
       ],
       "settings": [
         "on a sunny beach with crashing waves",
-        "in a bustling, colorful street market",
+        "in a colorful street market",
         "around a warm evening bonfire",
-        "in a neighborhood block where everyone knows each other",
-        "walking under the shade of a palm tree",
-        "in a yard where the whole community gathers on Sundays",
-        "on a long bus ride through the hills at sunrise",
-        "by the river where elders teach the young ones"
+        "in a yard where the community gathers"
       ],
       "conflicts": [
-        "choosing peace when pushed toward anger",
-        "rising above the daily struggles of life",
-        "standing up for truth against oppression",
-        "ignoring the noise of the modern world",
-        "unifying people from different backgrounds",
-        "keeping love alive across long distances and borders",
-        "staying rooted in culture while the world moves fast",
-        "finding beauty in simplicity when the system pushes for more"
+        "choosing peace in hard times",
+        "rising above daily struggles",
+        "unifying people from different places",
+        "staying rooted in a fast world"
       ],
       "objects_of_focus": [
         "a roaring fire",
-        "a lion pendant",
         "the beating of an old drum",
-        "a cool ocean breeze",
         "the roots of a giant tree",
-        "a worn-out guitar with a missing string that still plays",
-        "smoke rising slow from a hand-rolled cigarette",
-        "a flag faded from years in the sun"
+        "a cool ocean breeze"
       ]
     },
     "topics": [
       "Unity in the community",
       "Love that survives everything",
-      "Rising above the daily grind",
       "Returning to roots",
-      "Keeping the faith when times are hard"
+      "Keeping faith when times are hard"
     ]
   },
   "slow_rock": {
-    "keywords": [
-      "80s power ballad",
-      "80s",
-      "slow rock",
-      "ballad",
-      "soft rock",
-      "power ballad",
-      "slowrock",
-      "acoustic rock",
-      "love song"
-    ],
-    "guide": "SLOW ROCK / BALLAD. Lyrics MUST be emotionally powerful and dramatic. Themes: deep love, loss, heartbreak, longing, perseverance, nostalgia, goodbye.",
-    "emotions": [
-      "heartbroken",
-      "dramatic",
-      "nostalgic",
-      "powerful",
-      "longing"
-    ],
+    "keywords": ["80s power ballad", "slow rock", "ballad", "soft rock"],
+    "guide": "SLOW ROCK / BALLAD. Lyrics MUST be emotionally powerful. Themes: deep love, heartbreak, nostalgia, goodbye.",
+    "emotions": ["heartbroken", "dramatic", "nostalgic", "powerful"],
     "vocal_style": "Powerful, raspy, emotional build-up, belting highs",
     "lyric_structure": "[Verse 1]\n[Pre-Chorus]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Guitar Solo]\n[Big Chorus]\n[Outro]",
     "matrix_variables": {
       "characters": [
-        "A person walking away for the last time",
-        "Someone holding onto a failing marriage",
+        "Someone walking away for the last time",
         "A lonely traveler far from home",
-        "A widow/widower remembering their youth",
         "Someone trying to forgive a betrayal",
-        "A musician playing the last concert of a long career",
-        "Someone reading old love letters found in a drawer",
-        "A father watching his child leave for college"
+        "A person reading old love letters"
       ],
       "settings": [
         "on an empty highway at midnight",
         "standing outside a closed front door",
-        "in a smoky, empty bar",
-        "looking out at a violent thunderstorm",
-        "packing a suitcase in a silent room",
-        "on a wooden pier watching the last ferry leave",
-        "in a childhood bedroom that looks exactly the same",
-        "driving through a hometown that doesn't recognize you anymore"
+        "looking out at a thunderstorm",
+        "packing a suitcase in a silent room"
       ],
       "conflicts": [
         "finding the strength to move on",
-        "a love that survived everything except silence",
         "saying a goodbye that changes everything",
-        "fighting for a relationship standing on the edge",
-        "the painful realization that childhood is gone",
-        "loving someone who gave up on love years ago",
-        "watching a dream slowly slip through your hands",
-        "forgiving yourself for the years you wasted being afraid"
+        "fighting for a failing relationship",
+        "watching a dream slip away"
       ],
       "objects_of_focus": [
         "a cracked rearview mirror",
-        "a silver wedding ring on a table",
         "an old, torn photograph",
-        "a burning cigarette",
         "a leather jacket left behind",
-        "a cassette tape with a handwritten label",
-        "a guitar pick worn down on one side",
-        "a street sign from a road that no longer exists"
+        "a cassette tape with a handwritten label"
       ]
     },
     "topics": [
-      "Holding on to a love that's slipping away",
+      "Holding on to a slipping love",
       "The road after the last goodbye",
-      "A marriage that survived everything except the silence",
-      "Saying goodbye to a version of yourself",
-      "The beautiful pain of something ending"
+      "Saying goodbye to your past",
+      "The beautiful pain of an ending"
     ]
   },
   "hiphop": {
-    "keywords": [
-      "hip hop",
-      "rap",
-      "trap",
-      "drill",
-      "boom bap"
-    ],
-    "guide": "HIP HOP / RAP. Lyrics MUST have strong flow, wordplay, and storytelling. Themes: ambition, hustle, street reality, confidence, loyalty, overcoming adversity.",
-    "emotions": [
-      "confident",
-      "aggressive",
-      "determined",
-      "gritty",
-      "ambitious"
-    ],
-    "vocal_style": "Rhythmic delivery, punchy flow, dynamic cadence, fast-paced",
+    "keywords": ["hip hop", "rap", "trap", "boom bap"],
+    "guide": "HIP HOP / RAP. Lyrics MUST have strong flow and storytelling. Themes: ambition, hustle, reality, confidence.",
+    "emotions": ["confident", "determined", "gritty", "ambitious"],
+    "vocal_style": "Rhythmic delivery, punchy flow, fast-paced",
     "lyric_structure": "[Intro]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Outro]",
     "matrix_variables": {
       "characters": [
-        "An underdog working while everyone sleeps",
-        "Someone who finally made it to the top",
-        "A loyal friend reflecting on the neighborhood",
-        "An ambitious youth with nothing to lose",
-        "A person betrayed by their own circle",
-        "A first-generation college student carrying family pressure",
-        "Someone who made it but can't shake where they came from",
-        "An artist choosing art over a stable job"
+        "An underdog working while others sleep",
+        "Someone who finally made it",
+        "A loyal friend from the neighborhood",
+        "An ambitious youth with nothing to lose"
       ],
       "settings": [
-        "on a city rooftop looking down at the streets",
+        "on a city rooftop looking down",
         "in a late-night recording studio",
-        "driving a luxury car through an old neighborhood",
-        "under the yellow glow of a streetlamp",
-        "in a crowded, chaotic alleyway",
-        "in a car outside the old neighborhood",
-        "a late-night studio session with one engineer",
-        "scrolling through old texts while the beat plays"
+        "driving through the old neighborhood",
+        "under the glow of a streetlamp"
       ],
       "conflicts": [
-        "the heavy price of sudden success",
-        "staying true to roots when the world changes",
-        "proving the doubters completely wrong",
-        "carrying the weight of a family's expectations",
-        "learning hard lessons from the streets",
-        "staying humble when the whole city is watching",
-        "the gap between who they are and who they perform to be",
-        "outgrowing friends who refuse to grow with you"
+        "staying true to roots after success",
+        "proving the doubters wrong",
+        "carrying the weight of expectations",
+        "outgrowing friends who refuse to grow"
       ],
       "objects_of_focus": [
-        "a heavy gold chain",
         "a ticking luxury watch",
-        "scuff marks on brand new sneakers",
-        "a wad of cash on a dashboard",
-        "a microphone wrapped in an old wire",
-        "a beat-up notebook filled with crossed-out bars",
-        "a phone screen cracked from a year ago",
-        "a hoodie from a place they can never go back to"
+        "scuff marks on new sneakers",
+        "a beat-up notebook of lyrics",
+        "a cracked phone screen"
       ]
     },
     "topics": [
       "Coming up from nothing",
-      "The city that made you who you are",
+      "The city that made you",
       "Loyalty tested by success",
-      "Putting family on your back",
-      "Making something out of whatever you had"
+      "Making something out of nothing"
     ]
   },
   "jazz": {
-    "keywords": [
-      "jazz",
-      "blues",
-      "swing",
-      "bossa nova",
-      "bebop",
-      "smooth jazz"
-    ],
-    "guide": "JAZZ / BLUES music. Lyrics MUST have sophisticated, poetic quality. Themes: longing, late-night melancholy, bittersweet love, city life, heartache.",
-    "emotions": [
-      "melancholic",
-      "sophisticated",
-      "chill",
-      "romantic",
-      "wistful"
-    ],
-    "vocal_style": "Smoky, crooning, expressive, dynamic, scatting, warm",
+    "keywords": ["jazz", "blues", "smooth jazz", "bossa nova"],
+    "guide": "JAZZ / BLUES. Lyrics MUST have a poetic quality. Themes: late-night melancholy, bittersweet love, city life.",
+    "emotions": ["melancholic", "sophisticated", "chill", "romantic"],
+    "vocal_style": "Smoky, crooning, expressive, warm",
     "lyric_structure": "[Intro]\n[Verse 1]\n[Chorus]\n[Instrumental Solo]\n[Verse 2]\n[Outro]",
     "matrix_variables": {
       "characters": [
         "A mysterious stranger sitting alone",
-        "A melancholic musician packing up their instrument",
-        "Someone walking home after a bad date",
-        "Two lovers sharing a final, silent drink",
-        "An old soul reminiscing about the 1950s",
-        "A trumpet player finishing the last set of the night",
-        "Two strangers bonding over the same song at the bar",
-        "An old couple who met at this very club decades ago"
+        "A melancholic musician packing up",
+        "Two lovers sharing a final drink",
+        "An old soul reminiscing about the past"
       ],
       "settings": [
         "in a dimly lit, smoky jazz club",
-        "walking down a cobblestone street in the rain",
+        "walking down a street in the rain",
         "on a balcony overlooking a sleepless city",
-        "in a classic diner at 3 AM",
-        "sitting on a park bench watching autumn leaves fall",
-        "on a fire escape above a sleepless Manhattan street",
-        "in a basement speakeasy where the walls remember everything",
-        "riding a late-night subway with a saxophone case"
+        "in a classic diner at 3 AM"
       ],
       "conflicts": [
-        "loving someone who will never belong to them",
-        "the deep loneliness of a crowded city",
+        "loving someone who will never belong to you",
         "the quiet beauty of an ending relationship",
         "nostalgia for a life that could have been",
-        "music filling the silence left by an argument",
-        "the ache of almost love that never became anything more",
-        "playing beautifully for a crowd that isn't really listening",
-        "carrying the joy and the grief of an entire generation in one melody"
+        "the deep loneliness of a crowded city"
       ],
       "objects_of_focus": [
         "a spilled cocktail glass",
-        "a saxophone resting on a stand",
-        "a fedora tipped down to hide the eyes",
-        "raindrops racing down a window pane",
-        "a flickering neon 'Open' sign",
-        "a drink coaster with a phone number written in lipstick",
-        "a muted trumpet resting on its velvet case",
-        "cigarette smoke curling under a yellow spotlight"
+        "raindrops on a window pane",
+        "a flickering neon sign",
+        "cigarette smoke under a spotlight"
       ]
     },
     "topics": [
-      "A love you carry quietly",
       "Last call at a place you love",
-      "The one that got away on a rainy night",
+      "The one that got away",
       "Something beautiful in the sadness",
       "An old song that explains everything"
     ]
   },
   "metal": {
-    "keywords": [
-      "metal",
-      "heavy metal",
-      "death metal",
-      "black metal",
-      "thrash metal",
-      "punk",
-      "grunge",
-      "screamo",
-      "hardcore"
-    ],
-    "guide": "ROCK / METAL. Lyrics MUST feel raw, intense, powerful. Themes: rebellion, freedom, inner demons, anger, strength, defiance.",
-    "emotions": [
-      "angry",
-      "rebellious",
-      "intense",
-      "dark",
-      "empowered"
-    ],
-    "vocal_style": "Harsh vocals, screaming, growling, powerful clean belting, aggressive",
-    "lyric_structure": "[Intro]\n[Verse 1]\n[Pre-Chorus]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Breakdown]\n[Guitar Solo]\n[Outro]",
+    "keywords": ["metal", "heavy metal", "rock", "hardcore"],
+    "guide": "ROCK / METAL. Lyrics MUST feel raw and intense. Themes: rebellion, inner demons, anger, defiance.",
+    "emotions": ["angry", "rebellious", "intense", "empowered"],
+    "vocal_style": "Harsh vocals, powerful clean belting, aggressive",
+    "lyric_structure": "[Verse 1]\n[Pre-Chorus]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Breakdown]\n[Outro]",
     "matrix_variables": {
       "characters": [
-        "A rebel breaking away from a corrupted system",
-        "A tormented soul fighting their inner thoughts",
-        "An outcast seeking revenge on those who wronged them",
-        "A survivor rising from the absolute bottom",
-        "Someone waking up to the lies of society",
-        "A soldier returning home to a world that doesn't understand them",
-        "Someone who survived what was meant to destroy them",
-        "An outsider who turned rage into art"
+        "A rebel breaking away from the system",
+        "A tormented soul fighting inner thoughts",
+        "A survivor rising from the bottom",
+        "An outcast seeking truth"
       ],
       "settings": [
-        "in a crumbling, abandoned warehouse",
-        "standing on the edge of a bottomless cliff",
-        "in a suffocating, windowless room",
-        "walking through a scorched, ruined landscape",
-        "in the middle of a violent, raging storm",
-        "in the center of a mosh pit where nobody judges you",
-        "alone in a basement at 3 AM playing until fingers bleed",
-        "standing on stage feeling the crowd's energy hit like a wall"
+        "in a crumbling warehouse",
+        "standing on the edge of a cliff",
+        "in the middle of a violent storm",
+        "in the center of a mosh pit"
       ],
       "conflicts": [
-        "the burning rage of being completely ignored",
-        "breaking free from expectations that crush the spirit",
-        "finding raw power in absolute chaos",
-        "the loneliness of being permanently misunderstood",
+        "breaking free from expectations",
+        "the internal war of the mind",
         "screaming the truth to a deaf world",
-        "the internal war between destruction and creation",
-        "screaming the truth that polite society refuses to hear",
-        "rebuilding identity after everything was stripped away"
+        "turning pain into power"
       ],
       "objects_of_focus": [
         "shattered glass on the floor",
-        "heavy, rusted iron chains",
-        "a burning flag",
+        "heavy, rusted chains",
         "a mirror reflecting a monster",
-        "bloodied knuckles",
-        "a guitar pick embedded in the stage floor",
-        "a scream that finally releases years of silence",
-        "a fist raised not in anger but in solidarity"
+        "bloodied knuckles"
       ]
     },
     "topics": [
       "The rage that keeps you standing",
-      "Breaking the chains put on you",
-      "The war inside your own mind",
-      "Standing alone when the crowd abandons you",
+      "Breaking the chains",
+      "The war inside your mind",
       "Turning pain into power"
     ]
   },
   "rock": {
-    "keywords": [
-      "rock",
-      "alternative",
-      "indie rock",
-      "hard rock",
-      "post-rock",
-      "classic rock",
-      "garage rock"
-    ],
-    "guide": "ROCK / ALTERNATIVE. Lyrics MUST feel energetic and authentic. Themes: freedom, personal struggle, identity, love and loss. Use direct language.",
-    "emotions": [
-      "energetic",
-      "rebellious",
-      "angsty",
-      "liberated",
-      "raw"
-    ],
-    "vocal_style": "Edgy, raw, powerful, energetic, raspy, loud",
-    "lyric_structure": "[Intro]\n[Verse 1]\n[Pre-Chorus]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Chorus]\n[Outro]",
+    "keywords": ["rock", "alternative", "indie rock"],
+    "guide": "ROCK / ALTERNATIVE. Lyrics MUST feel energetic and authentic. Themes: freedom, identity, love, and loss.",
+    "emotions": ["energetic", "rebellious", "liberated", "raw"],
+    "vocal_style": "Edgy, raw, powerful, energetic",
+    "lyric_structure": "[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Chorus]\n[Outro]",
     "matrix_variables": {
       "characters": [
         "A restless youth leaving their hometown",
-        "Someone escaping a dead-end job",
-        "A wild spirit living only for the weekend",
+        "A wild spirit living for the weekend",
         "Two outcasts against the world",
-        "A person finally speaking their mind",
-        "A band playing their last show in a half-empty bar",
-        "A teenager who found themselves through a three-chord song",
-        "Someone who gave up a safe life to chase something real"
+        "Someone giving up a safe life for reality"
       ],
       "settings": [
         "in a hot, cramped garage studio",
-        "driving a beat-up car down a desert highway",
+        "driving a beat-up car down a highway",
         "under the blinding lights of a stage",
-        "on the roof of a high school building",
-        "in the center of a sweating, jumping crowd",
-        "backstage five minutes before everything changes",
-        "in a van driving between cities with no plan",
-        "a rooftop show ending as the sun comes up"
+        "on the roof of a high school building"
       ],
       "conflicts": [
-        "choosing who you want to be despite what others say",
-        "the electric tension of a chaotic relationship",
-        "surviving something meant to break you",
-        "the anger of watching a friendship fall apart",
+        "choosing who you want to be",
+        "the tension of a chaotic relationship",
         "refusing to settle for an ordinary life",
-        "staying true to the music when the label wants something else",
-        "the romance and the exhaustion of life on the road",
-        "proving that the noise you make actually means something"
+        "surviving something meant to break you"
       ],
       "objects_of_focus": [
         "a scratched electric guitar",
         "a pair of torn denim jeans",
-        "a broken drumstick",
         "a speeding ticket on the dashboard",
-        "a microphone stand kicked to the ground",
-        "a set list scrawled on a torn paper bag",
-        "a guitar strap worn soft from years of playing",
-        "an amp humming quietly in the corner of a dark room"
+        "a broken drumstick"
       ]
     },
     "topics": [
       "A night that felt like freedom",
       "Two outsiders against the world",
       "The road that never ends",
-      "Choosing who you want to be",
-      "Burning it all down and starting fresh"
+      "Choosing who you want to be"
     ]
   },
   "indie": {
-    "keywords": [
-      "indie",
-      "folk",
-      "acoustic",
-      "singer-songwriter",
-      "folk rock",
-      "americana folk",
-      "chamber folk",
-      "indie pop",
-      "lo-fi acoustic"
-    ],
-    "guide": "INDIE / FOLK. Lyrics MUST feel personal, introspective, and poetic. Themes: everyday moments, nostalgia, nature, identity, quiet observations.",
-    "emotions": [
-      "melancholic",
-      "introspective",
-      "nostalgic",
-      "intimate",
-      "vulnerable"
-    ],
-    "vocal_style": "Raw, breathy, intimate, conversational, unpolished, close-mic",
-    "lyric_structure": "[Intro - acoustic]\n[Verse 1]\n[Pre-Chorus]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Outro - fading]",
+    "keywords": ["indie", "folk", "acoustic", "singer-songwriter"],
+    "guide": "INDIE / FOLK. Lyrics MUST feel personal and introspective. Themes: everyday moments, nostalgia, quiet observations.",
+    "emotions": ["melancholic", "introspective", "nostalgic", "intimate"],
+    "vocal_style": "Raw, breathy, intimate, unpolished",
+    "lyric_structure": "[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Outro]",
     "matrix_variables": {
       "characters": [
-        "A quiet writer running out of words",
         "Someone cleaning out their childhood bedroom",
         "An insomniac watching the city lights",
-        "A traveler who lost their map",
         "Two strangers sharing an umbrella",
-        "A poet who stopped writing and is trying to start again",
-        "Someone moving to a new city with two bags and a lot of hope",
-        "A person who fell in love with the wrong season"
+        "A traveler who lost their map"
       ],
       "settings": [
         "in an empty 24-hour diner",
-        "on a dusty porch while a storm rolls in",
-        "sitting on the floor of an unfurnished apartment",
+        "sitting on the floor of an empty apartment",
         "at a foggy train station at midnight",
-        "driving on an endless highway with no radio",
-        "in a record shop on a slow rainy afternoon",
-        "a rooftop garden in autumn with no one else around",
-        "sitting by a window in a foreign city watching people pass"
+        "driving on a highway with no radio"
       ],
       "conflicts": [
-        "trying desperately to forget a specific mistake",
-        "finding peace with an apology never received",
-        "missing a version of themselves that no longer exists",
-        "learning to be completely okay with being alone",
-        "watching seasons change while feeling stuck in time",
-        "the grief of outgrowing a version of yourself you loved",
-        "wanting connection but craving solitude at the same time",
-        "finding meaning in the ordinary while everyone chases the extraordinary"
+        "missing a version of yourself that is gone",
+        "learning to be okay with being alone",
+        "watching seasons change while feeling stuck",
+        "finding meaning in the ordinary"
       ],
       "objects_of_focus": [
-        "a cold cup of black coffee",
+        "a cold cup of coffee",
         "a fading polaroid photograph",
-        "an unsent letter hidden inside a book",
-        "keys to a door that doesn't exist anymore",
-        "a dried flower pressed between pages",
-        "a library book returned a year late",
-        "a potted plant that somehow survived everything",
-        "a ticket stub from a show that changed your life"
+        "a dried flower pressed in a book",
+        "a potted plant that survived everything"
       ]
     },
     "topics": [
-      "Rearranging a room and feeling something shift",
-      "The particular loneliness of being known by no one",
-      "A season of your life you can't quite explain",
       "Getting okay with being alone",
-      "A quiet Tuesday that somehow mattered"
+      "A season of life you can't explain",
+      "A quiet Tuesday that mattered",
+      "The loneliness of being unknown"
     ]
   },
   "edm": {
-    "keywords": [
-      "edm",
-      "electronic",
-      "house",
-      "techno",
-      "trance",
-      "dance",
-      "dubstep",
-      "drum and bass",
-      "dnb",
-      "ambient electronic",
-      "progressive house",
-      "deep house",
-      "future bass"
-    ],
-    "guide": "EDM / ELECTRONIC music. Lyrics MUST be euphoric, energetic, and danceable. Themes: freedom, dancing, connection, the night, unity, being alive. Use repetitive anthemic hooks.",
-    "emotions": [
-      "euphoric",
-      "energetic",
-      "hypnotic",
-      "joyful",
-      "free"
-    ],
-    "vocal_style": "Pop-leaning, airy, processed, chopped vocals, anthemic loops",
-    "lyric_structure": "[Intro]\n[Verse 1]\n[Build-up]\n[Drop / Chorus]\n[Verse 2]\n[Build-up]\n[Drop / Chorus]\n[Outro]",
+    "keywords": ["edm", "house", "dance", "electronic"],
+    "guide": "EDM / ELECTRONIC. Lyrics MUST be euphoric and simple. Themes: freedom, dancing, the night, unity. Use repetitive hooks.",
+    "emotions": ["euphoric", "energetic", "joyful", "free"],
+    "vocal_style": "Airy, processed, anthemic loops",
+    "lyric_structure": "[Verse 1]\n[Build-up]\n[Drop / Chorus]\n[Verse 2]\n[Build-up]\n[Drop / Chorus]",
     "matrix_variables": {
       "characters": [
-        "Someone dancing alone to forget their worries",
-        "Two strangers locking eyes across the room",
-        "A weekend raver living for the night",
+        "Someone dancing alone to forget worries",
+        "Two strangers locking eyes",
         "A group of friends feeling invincible",
-        "Someone driving to a massive music festival",
-        "A DJ feeling the moment the crowd finally connects",
-        "Someone who came to the club heartbroken and left feeling whole",
-        "Two people who fall in love in the middle of a drop"
+        "A weekend raver living for the night"
       ],
       "settings": [
         "in the center of a massive dancefloor",
-        "underneath blinding, sweeping laser lights",
-        "in an underground, sweaty warehouse club",
+        "underneath sweeping laser lights",
         "watching the sunrise after a long night out",
-        "in a car with the bass shaking the windows",
-        "at an open-air festival as the sun goes down and the lasers come on",
-        "in the DJ booth watching a sea of hands go up",
-        "on a crowded ferry with speakers loud enough to shake the water"
+        "at an open-air festival"
       ],
       "conflicts": [
         "losing yourself completely in the music",
-        "wanting the present moment to last forever",
-        "finding genuine connection in a crowd of thousands",
-        "letting go of weekly stress through movement",
-        "the feeling of total freedom when the beat drops",
-        "the joy so intense it feels like it might break you",
-        "a temporary connection that feels more real than anything permanent",
-        "living fully in the present because tomorrow feels too uncertain"
+        "wanting the moment to last forever",
+        "finding connection in a crowd",
+        "letting go of stress through movement"
       ],
       "objects_of_focus": [
         "glowing neon wristbands",
-        "a heavy, vibrating speaker cone",
+        "a vibrating speaker",
         "confetti falling from the ceiling",
-        "sweat dripping down a face",
-        "a pulsing strobe light",
-        "a dropped lighter nobody stops to pick up",
-        "a wristband that means you belong here tonight",
-        "headphones around a neck between sets"
+        "a pulsing strobe light"
       ]
     },
     "topics": [
       "The drop that changed everything",
-      "Two strangers connecting under the lights",
-      "A night so good it became a memory instantly",
-      "Losing yourself in the music for a few hours",
-      "Sunrise after a long night out"
+      "Connecting under the lights",
+      "A night that became a memory instantly",
+      "Losing yourself in the music"
     ]
   },
   "lofi": {
-    "keywords": [
-      "lofi",
-      "lo-fi",
-      "lo fi",
-      "chill hop",
-      "chillhop",
-      "study beats",
-      "bedroom pop",
-      "bedroom music",
-      "chill beats",
-      "study beat",
-      "relaxing study",
-      "smooth chill",
-      "vinyl crackle",
-      "tape saturation"
-    ],
-    "guide": "LO-FI / CHILL HOP music. SEMI-INSTRUMENTAL style. Lyrics are SHORT: only 1 verse (2-4 lines) and 1 chorus (1-2 lines). Themes: late nights studying, peaceful solitude, soft nostalgia, quiet focus.",
-    "emotions": [
-      "calm",
-      "peaceful",
-      "focused",
-      "nostalgic",
-      "sleepy"
-    ],
-    "vocal_style": "Muffled, distant, spoken word, soft humming, minimal, whispered",
-    "lyric_structure": "[Intro - instrumental]\n[Verse]\n[Instrumental break]\n[Chorus]\n[Instrumental break]\n[Outro - instrumental]",
+    "keywords": ["lofi", "chill hop", "study beats", "bedroom pop"],
+    "guide": "LO-FI. SEMI-INSTRUMENTAL. Lyrics are SHORT (1 verse, 1 chorus). Themes: late nights studying, soft nostalgia, quiet focus.",
+    "emotions": ["calm", "peaceful", "focused", "nostalgic"],
+    "vocal_style": "Muffled, distant, spoken word, minimal",
+    "lyric_structure": "[Intro - instrumental]\n[Verse]\n[Chorus]\n[Outro - instrumental]",
     "matrix_variables": {
       "characters": [
         "A student studying late into the night",
-        "An artist sketching in a sketchbook",
-        "Someone watching the rain from their window",
+        "Someone watching rain from a window",
         "A person petting their sleeping cat",
-        "Someone journaling in quiet solitude",
-        "A freelancer working through a slow, gray afternoon",
-        "Someone replaying a memory they can't quite hold onto",
-        "A night owl watching the city from a quiet apartment"
+        "A night owl watching the city"
       ],
       "settings": [
-        "in a cozy bedroom lit only by a desk lamp",
-        "in a quiet library smelling of old books",
-        "on a train seat watching the countryside blur",
-        "at a wooden desk cluttered with notes",
-        "in a living room with an old vinyl spinning",
-        "in a small kitchen waiting for the kettle to boil",
-        "on a park bench in the last hour of daylight",
-        "in a childhood bedroom you only visit in your mind now"
+        "in a cozy bedroom lit by a desk lamp",
+        "in a quiet library",
+        "on a train seat watching the world blur",
+        "in a living room with vinyl spinning"
       ],
       "conflicts": [
-        "finding focus amidst anxious thoughts",
-        "the peaceful pause between finishing tasks",
+        "finding focus amidst thoughts",
+        "drifting between wakefulness and sleep",
         "enjoying the sound of silence",
-        "drifting slowly between wakefulness and sleep",
-        "a gentle nostalgia for a lazy Sunday",
-        "the pleasant emptiness between finishing one thing and starting another",
-        "sitting with a feeling without needing to name it",
-        "the slow passage of a day that was neither good nor bad"
+        "the slow passage of a quiet day"
       ],
       "objects_of_focus": [
-        "a steaming mug of green tea",
-        "a highlighter pen left open",
+        "a steaming mug of tea",
         "raindrops sliding down the glass",
         "a spinning vinyl record",
-        "a warm, knitted blanket",
-        "a pencil tapping slowly on an open notebook",
-        "a window fogged from the inside on a cold day",
-        "a bookmark in a book left unread for months"
+        "a window fogged from the inside"
       ]
     },
     "topics": [
-      "A Tuesday afternoon going nowhere in particular",
       "Studying with the rain on the window",
       "The gap between tasks where you breathe",
       "Watching a city from a quiet room",
-      "A playlist you made for no one but yourself"
+      "A lazy Sunday afternoon"
     ]
   },
   "country": {
-    "keywords": [
-      "country",
-      "bluegrass",
-      "americana",
-      "country pop",
-      "outlaw country",
-      "southern rock"
-    ],
-    "guide": "COUNTRY music. Lyrics MUST feel honest and rooted in real life. Themes: home, family, heartbreak, open roads, trucks, whiskey, loyalty, small-town life. Use direct storytelling.",
-    "emotions": [
-      "nostalgic",
-      "heartwarming",
-      "loyal",
-      "heartbroken",
-      "honest"
-    ],
-    "vocal_style": "Twangy, storytelling, warm, rustic, rich, narrative",
-    "lyric_structure": "[Intro]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Chorus]\n[Outro]",
+    "keywords": ["country", "americana", "southern rock"],
+    "guide": "COUNTRY. Lyrics MUST feel honest. Themes: home, family, heartbreak, open roads, small-town life. Use direct storytelling.",
+    "emotions": ["nostalgic", "heartwarming", "heartbroken", "honest"],
+    "vocal_style": "Twangy, storytelling, warm, rustic",
+    "lyric_structure": "[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Outro]",
     "matrix_variables": {
       "characters": [
-        "An old farmer looking at their land",
         "A person driving back to their hometown",
-        "A cowboy far away from the one they love",
-        "A grandfather telling a story on the porch",
+        "An old farmer looking at their land",
         "Someone drinking away a broken heart",
-        "A rancher passing down land that's been in the family for generations",
-        "A young woman leaving a small town with no plans to come back",
-        "Two people falling apart slowly in a farmhouse kitchen"
+        "A grandfather telling a story"
       ],
       "settings": [
         "driving a dusty truck down a dirt road",
-        "sitting on a wooden front porch at sunset",
-        "in a crowded, noisy local tavern",
-        "by a crackling campfire under the stars",
-        "standing in an open, golden wheat field",
-        "on a back porch watching a thunderstorm roll across flat land",
-        "at a county fair where you ran into your first love",
-        "in a pickup truck parked outside the house you grew up in"
+        "sitting on a wooden front porch",
+        "in a crowded local tavern",
+        "by a crackling campfire"
       ],
       "conflicts": [
         "missing the simplicity of how things used to be",
-        "working hard but feeling like you're falling behind",
-        "the pain of leaving home for the big city",
+        "the pain of leaving home",
         "a summer romance that ended too soon",
-        "staying loyal to friends when life gets tough",
-        "the ache of loving a place that couldn't love you back",
-        "a reconciliation that comes twenty years too late",
-        "choosing roots over the life you always said you'd go build"
+        "choosing roots over city life"
       ],
       "objects_of_focus": [
-        "a worn-out pair of leather boots",
-        "an old acoustic guitar in the corner",
-        "a glass of whiskey on ice",
-        "a rusted mailbox",
-        "a dog sleeping by the fire",
-        "a dog-eared recipe card in a dead grandmother's handwriting",
-        "a porch swing that creaks in the exact same spot",
-        "a jar of sweet tea sweating on a wooden railing"
+        "worn-out leather boots",
+        "an old acoustic guitar",
+        "a glass of whiskey",
+        "a porch swing that creaks"
       ]
     },
     "topics": [
-      "The town that never changed while you did",
-      "A love that smelled like summer and gasoline",
-      "Sunday mornings and your grandma's voice",
+      "The town that never changed",
       "A dog, a truck, and a broken heart",
-      "Coming home to find nothing the same"
+      "Coming home to find nothing the same",
+      "Sunday mornings and grandma's voice"
     ]
   },
   "latin": {
-    "keywords": [
-      "latin",
-      "salsa",
-      "bachata",
-      "cumbia",
-      "reggaeton",
-      "bossa",
-      "samba",
-      "merengue",
-      "flamenco",
-      "mariachi"
-    ],
-    "guide": "LATIN music. Lyrics MUST be passionate and rhythmic. Themes: love, desire, celebration, heartbreak, dance, the beauty of life. Use vivid, sensory language.",
-    "emotions": [
-      "passionate",
-      "joyful",
-      "romantic",
-      "fiery",
-      "celebratory"
-    ],
-    "vocal_style": "Expressive, rhythmic, passionate, vibrato-rich, upbeat",
-    "lyric_structure": "[Intro]\n[Verse 1]\n[Pre-Chorus]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Outro]",
+    "keywords": ["latin", "salsa", "reggaeton", "bachata"],
+    "guide": "LATIN. Lyrics MUST be passionate. Themes: love, desire, celebration, dance, the beauty of life.",
+    "emotions": ["passionate", "joyful", "romantic", "celebratory"],
+    "vocal_style": "Expressive, rhythmic, passionate, upbeat",
+    "lyric_structure": "[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Outro]",
     "matrix_variables": {
       "characters": [
-        "Two passionate dancers moving perfectly together",
+        "Two passionate dancers moving together",
         "A romantic singing outside a window",
-        "Someone dancing to cure a broken heart",
-        "A family celebrating a loud, happy reunion",
-        "A mysterious stranger met on vacation",
-        "A grandmother teaching her granddaughter to salsa in the kitchen",
-        "A man serenading someone who already said no",
-        "Two rivals who discover they're in love on the dancefloor"
+        "A family celebrating a reunion",
+        "A mysterious stranger met on vacation"
       ],
       "settings": [
-        "in a crowded, hot Havana nightclub",
-        "on a warm, breezy beach at sunset",
+        "in a crowded Havana nightclub",
+        "on a warm beach at sunset",
         "in a lively town plaza full of musicians",
-        "on a balcony overlooking the ocean",
-        "in a colorful, festive street parade",
-        "at a quinceañera where the whole family is watching",
-        "on a warm evening plaza where the music never stops",
-        "in a small coastal town where everyone dances until sunrise"
+        "at a family party where everyone dances"
       ],
       "conflicts": [
         "a love so intense it feels dangerous",
-        "the pure joy of celebrating life despite hardships",
-        "a romance that only lasts for the summer",
+        "the pure joy of celebrating life",
         "the rhythm taking control of the body",
-        "trying to win back a fiery lover",
-        "love forbidden by family but impossible to stop",
-        "the bittersweet joy of carrying your culture in a foreign country",
-        "a passion so strong it frightens the person feeling it"
+        "a romance that only lasts for the summer"
       ],
       "objects_of_focus": [
         "a bright red rose",
-        "a wooden acoustic guitar",
-        "a snapping hand fan",
-        "a glass of rum",
         "a spinning, colorful dress",
-        "gold hoop earrings catching the light mid-spin",
-        "a handwritten love letter sealed but never sent",
-        "maracas left on the table after the last song ends"
+        "a glass of rum",
+        "a wooden acoustic guitar"
       ]
     },
     "topics": [
-      "A dance that said everything words couldn't",
+      "A dance that said everything",
       "Falling in love at a summer festival",
       "A family table full of noise and warmth",
-      "A romance that only the ocean witnessed",
-      "The fire of a love that refuses to cool down"
+      "The fire of an endless love"
     ]
   },
   "pop": {
-    "keywords": [
-      "pop",
-      "dance pop",
-      "electropop",
-      "kpop",
-      "k-pop",
-      "synth pop",
-      "indie pop",
-      "art pop",
-      "teen pop"
-    ],
-    "guide": "POP music. Lyrics MUST be catchy, relatable, emotionally accessible. Themes: love, fun, empowerment, friendship, hope, heartbreak. Use modern conversational tone.",
-    "emotions": [
-      "upbeat",
-      "catchy",
-      "confident",
-      "fun",
-      "relatable"
-    ],
-    "vocal_style": "Clean, polished, expressive, dynamic, catchy phrasing, bright",
-    "lyric_structure": "[Verse 1]\n[Pre-Chorus]\n[Chorus]\n[Verse 2]\n[Pre-Chorus]\n[Chorus]\n[Bridge]\n[Chorus]\n[Outro]",
+    "keywords": ["pop", "dance pop", "synth pop"],
+    "guide": "POP. Lyrics MUST be catchy and relatable. Themes: love, fun, empowerment, friendship, heartbreak.",
+    "emotions": ["upbeat", "catchy", "confident", "relatable"],
+    "vocal_style": "Clean, polished, expressive, bright",
+    "lyric_structure": "[Verse 1]\n[Pre-Chorus]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Outro]",
     "matrix_variables": {
       "characters": [
         "A confident person realizing their worth",
         "A group of friends on a road trip",
-        "Someone completely obsessed with a new crush",
-        "A teenager sneaking out for the night",
-        "Someone celebrating being newly single",
-        "A girl realizing she's outgrown her relationship",
-        "A boy who misread every signal perfectly",
-        "Someone walking into a party pretending to be okay"
+        "Someone obsessed with a new crush",
+        "Someone celebrating being newly single"
       ],
       "settings": [
         "at a loud, colorful house party",
         "driving with the windows down in summer",
-        "getting ready in front of a bedroom mirror",
-        "walking through a bright shopping mall",
-        "dancing on a beach under the moonlight",
-        "in the back of an Uber heading home alone",
-        "at a coffee shop with a fake smile and earbuds in",
-        "watching old Instagram stories at 1 AM"
+        "getting ready in front of a mirror",
+        "in the back of an Uber heading home alone"
       ],
       "conflicts": [
         "the nervous excitement of a first date",
         "walking away from a toxic relationship",
         "feeling unstoppable on a perfect weekend",
-        "the confusion of a friendship turning into love",
-        "chasing a dream everyone says is impossible",
-        "the awkward in-between of almost but not quite",
-        "pretending to be fine when everything has changed",
-        "falling for someone who already has someone else"
+        "pretending to be fine when everything changed"
       ],
       "objects_of_focus": [
         "a ringing smartphone screen",
-        "glitter spilled on the floor",
-        "a favorite lip gloss",
-        "a pair of cheap sunglasses",
         "a photo booth picture strip",
-        "a half-typed message left unsent",
-        "a party cup left on the kitchen counter",
-        "a playlist that still has their name on it"
+        "a pair of cheap sunglasses",
+        "a party cup left on the counter"
       ]
     },
     "topics": [
       "A crush that turned into something real",
-      "Growing up faster than expected",
       "The best night that ended too soon",
-      "Starting over with a fresh playlist",
-      "Choosing yourself for the first time"
+      "Choosing yourself for the first time",
+      "Starting over with a fresh playlist"
     ]
   },
   "classical": {
-    "keywords": [
-      "classical",
-      "orchestral",
-      "cinematic",
-      "epic orchestral",
-      "film score",
-      "neoclassical",
-      "baroque",
-      "opera"
-    ],
-    "guide": "CLASSICAL / CINEMATIC music. If vocals are present, lyrics must feel grand, poetic, and timeless. Themes: the human journey, epic struggle, beauty of existence. Use elevated language.",
-    "emotions": [
-      "grand",
-      "epic",
-      "melancholic",
-      "transcendent",
-      "solemn"
-    ],
-    "vocal_style": "Operatic, choral, soaring, dramatic, pure tone, classical technique",
-    "lyric_structure": "[Intro - Orchestral]\n[Verse - Aria]\n[Chorus - Grand Choir]\n[Instrumental Interlude]\n[Outro - Decrescendo]",
+    "keywords": ["classical", "orchestral", "cinematic", "epic"],
+    "guide": "CLASSICAL / CINEMATIC. Themes: the human journey, epic struggle, beauty of existence. Keep lyrics minimal and poetic.",
+    "emotions": ["grand", "epic", "transcendent", "solemn"],
+    "vocal_style": "Operatic, choral, soaring, pure tone",
+    "lyric_structure": "[Intro]\n[Verse - Aria]\n[Chorus - Choir]\n[Outro]",
     "matrix_variables": {
       "characters": [
         "A tragic hero returning from battle",
-        "A queen mourning her fallen kingdom",
-        "An explorer looking out at a new world",
         "Two lovers separated by time",
-        "A ghost wandering ancient halls",
-        "A young prodigy playing their debut at a grand concert hall",
-        "An aging composer writing their final symphony",
-        "A ghost of a musician whose melody outlived everything"
+        "An explorer looking out at a new world",
+        "A ghost wandering ancient halls"
       ],
       "settings": [
         "in a grand, candlelit ballroom",
-        "on a misty, silent battlefield at dawn",
-        "inside a massive, echoing cathedral",
-        "on a cliff edge overlooking a vast ocean",
-        "walking through the ruins of a castle",
-        "in an empty rehearsal hall the night before the premiere",
-        "a candlelit chamber concert for an audience of twelve",
-        "standing at the grave of the composer whose music you love most"
+        "on a misty battlefield at dawn",
+        "inside a massive cathedral",
+        "on a cliff edge overlooking the ocean"
       ],
       "conflicts": [
-        "the overwhelming beauty of human existence",
+        "the overwhelming beauty of existence",
         "a love that transcends centuries",
-        "the final, epic struggle between light and dark",
-        "the quiet dignity of a noble sacrifice",
-        "memory acting as a bridge to the past",
-        "creating something that will outlast your own existence",
-        "the silence that falls when the last note finally dies",
-        "preserving beauty in a world that moves too fast to notice it"
+        "the struggle between light and dark",
+        "creating something that outlasts time"
       ],
       "objects_of_focus": [
         "a fallen golden crown",
         "a wilting white rose",
         "a shattered stained-glass window",
-        "a glowing pendant",
-        "a dusty, grand piano",
-        "a conductor's baton snapped in half and kept anyway",
-        "sheet music covered in pencil marks from a lifetime of rehearsal",
-        "a grand piano with one key that sticks"
+        "a dusty grand piano"
       ]
     },
     "topics": [
       "A love that survived centuries",
-      "The silence after the last note",
       "A journey with no certain end",
-      "Beauty found in an ordinary moment",
+      "The silence after the last note",
       "A voice echoing through empty halls"
     ]
   },
   "anime": {
-    "keywords": [
-      "anime",
-      "j-pop",
-      "jpop",
-      "j-rock",
-      "jrock",
-      "visual kei",
-      "city pop",
-      "japanese"
-    ],
-    "guide": "ANIME / J-POP. Lyrics should feel emotional, adventurous, and youthful. Themes: friendship, overcoming challenges, first love, fighting spirit, bittersweet endings.",
-    "emotions": [
-      "adventurous",
-      "emotional",
-      "determined",
-      "dramatic",
-      "youthful"
-    ],
-    "vocal_style": "High-energy, emotive, clear, powerful, fast-paced, earnest",
-    "lyric_structure": "[Intro - Fast]\n[Verse 1]\n[Pre-Chorus - Build]\n[Chorus - Anthemic]\n[Guitar/Synth Solo]\n[Outro]",
+    "keywords": ["anime", "j-pop", "j-rock"],
+    "guide": "ANIME / J-POP. Lyrics should feel emotional and adventurous. Themes: friendship, overcoming challenges, first love.",
+    "emotions": ["adventurous", "emotional", "determined", "youthful"],
+    "vocal_style": "High-energy, emotive, clear, powerful",
+    "lyric_structure": "[Intro]\n[Verse 1]\n[Chorus]\n[Guitar Solo]\n[Outro]",
     "matrix_variables": {
       "characters": [
-        "A determined protagonist facing impossible odds",
-        "Two rivals pushing each other to the limit",
+        "A determined protagonist facing odds",
+        "Two rivals pushing each other",
         "A loyal best friend offering support",
-        "A student experiencing their very first love",
-        "A mentor watching their student surpass them",
-        "A warrior saying goodbye before a battle they might not survive",
-        "A quiet student who is secretly the strongest one in the room",
-        "A villain who finally understands what they were fighting for"
+        "A student experiencing first love"
       ],
       "settings": [
         "on a high school rooftop at sunset",
-        "in the middle of a glowing, magical battlefield",
+        "in the middle of a glowing battlefield",
         "running through the rain on city streets",
-        "under a blooming cherry blossom tree",
-        "looking up at a sky full of shooting stars",
-        "at the edge of a cliff watching the final battle unfold below",
-        "in a training ground at dawn with only the wind as witness",
-        "on the last train home after the tournament ends"
+        "under a blooming cherry blossom tree"
       ],
       "conflicts": [
         "protecting the innocent with everything left",
-        "the bittersweet feeling of an adventure ending",
-        "unlocking hidden potential in a moment of despair",
-        "making an unbreakable promise to a friend",
-        "finding courage when all hope seems lost",
-        "carrying the weight of everyone's hopes on a single moment",
-        "choosing between the mission and the person you love most",
-        "the quiet aftermath of winning when everything still hurts"
+        "unlocking hidden potential in despair",
+        "making an unbreakable promise",
+        "the bittersweet feeling of an adventure ending"
       ],
       "objects_of_focus": [
-        "a glowing, mystical sword",
-        "a torn school uniform",
-        "a red ribbon tied around the wrist",
+        "a glowing sword",
         "a falling cherry blossom petal",
-        "a locket containing a photograph",
-        "a headband tied around the wrist before the final fight",
-        "a letter that was written but never read aloud",
-        "a single star falling at the exact right moment"
+        "a red ribbon tied around the wrist",
+        "a single star falling at the right moment"
       ]
     },
     "topics": [
       "A promise made before everything changed",
-      "Finding strength in the moment of despair",
+      "Finding strength in despair",
       "A friendship that saved everything",
-      "The final battle you almost didn't survive",
-      "A summer that ended but never really left"
+      "A summer that ended but never left"
     ]
   },
   "soulful": {
-    "keywords": [
-      "soulful",
-      "motown",
-      "funk",
-      "disco",
-      "old school",
-      "groove"
-    ],
-    "guide": "SOULFUL / FUNK. Lyrics MUST feel joyful, rhythmic, and full of life. Themes: celebration, love, dancing, community, good times. Use energetic, feel-good language.",
-    "emotions": [
-      "joyful",
-      "groovy",
-      "uplifting",
-      "warm",
-      "expressive"
-    ],
-    "vocal_style": "Soulful belting, raspy warmth, backing harmonies, improvisational runs",
-    "lyric_structure": "[Intro]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge - Breakdown]\n[Chorus]\n[Outro - Fade out]",
+    "keywords": ["soulful", "motown", "funk", "disco"],
+    "guide": "SOULFUL / FUNK. Lyrics MUST feel joyful and rhythmic. Themes: celebration, love, dancing, community.",
+    "emotions": ["joyful", "groovy", "uplifting", "expressive"],
+    "vocal_style": "Soulful belting, raspy warmth, backing harmonies",
+    "lyric_structure": "[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Outro]",
     "matrix_variables": {
       "characters": [
         "A groovy uncle who is the life of the party",
-        "A couple who has been married for 30 years",
-        "A community leader bringing the neighborhood together",
-        "A band warming up for a big show",
-        "Someone shaking off the stress of a long work week",
-        "A church choir director who pours everything into Sunday morning",
-        "A couple slow dancing in their kitchen after 40 years together",
-        "A street performer whose music stops a whole sidewalk"
+        "A couple married for 30 years",
+        "A community leader bringing people together",
+        "Someone shaking off the stress of work"
       ],
       "settings": [
         "at a lively neighborhood block party",
-        "inside a colorful, spinning roller rink",
-        "in a sunny backyard with a barbecue cooking",
+        "inside a spinning roller rink",
         "on a lit-up disco dancefloor",
-        "in a basement filled with vintage records",
-        "at a summer cookout where the speakers are turned all the way up",
-        "inside a small soul food restaurant on a Friday evening",
-        "at a family reunion where three generations dance to the same song"
+        "at a summer cookout"
       ],
       "conflicts": [
         "letting the music heal a broken spirit",
-        "celebrating love that grows stronger with age",
-        "unifying different people through a shared groove",
-        "refusing to let negativity ruin a perfect day",
-        "finding the rhythm that moves the soul",
-        "keeping the groove alive even when life gets heavy",
-        "loving someone through their worst season and dancing anyway",
-        "the way music holds a community together when nothing else can"
+        "celebrating love that grows stronger",
+        "refusing to let negativity ruin a day",
+        "unifying people through a shared groove"
       ],
       "objects_of_focus": [
-        "a spinning vinyl record on a turntable",
+        "a spinning vinyl record",
         "a shining disco ball",
         "a pair of vintage roller skates",
-        "a microphone with a long cord",
-        "a shiny brass saxophone",
-        "a tambourine passed down through three generations",
-        "sweat glistening on the neck of a bass player mid-solo",
-        "a microphone stand with decades of tape wrapped around it"
+        "a tambourine passed down generations"
       ]
     },
     "topics": [
       "The groove that heals everything",
       "A love that gets better with age",
-      "Dancing away what the week left behind",
-      "Community that shows up when it matters",
-      "Joy as an act of survival"
+      "Dancing away the week's stress",
+      "Community showing up when it matters"
     ]
   },
   "ambient": {
-    "keywords": [
-      "ambient",
-      "meditation",
-      "relaxation",
-      "spa",
-      "nature sounds",
-      "healing",
-      "sleep music",
-      "mindfulness"
-    ],
-    "guide": "AMBIENT / MEDITATION music. Lyrics (if any) must be minimal, mantra-like, and calming. Themes: inner peace, breath, presence, letting go, stillness. Use soft, flowing words.",
-    "emotions": [
-      "peaceful",
-      "still",
-      "meditative",
-      "ethereal",
-      "drifting"
-    ],
-    "vocal_style": "Whispered, ethereal, echoing, wordless choirs, barely there",
-    "lyric_structure": "[Intro - Long fade in]\n[Verse - Spoken/Whisper]\n[Instrumental Flow]\n[Chorus - Mantra]\n[Outro - Endless fade]",
+    "keywords": ["ambient", "meditation", "relaxation", "sleep music"],
+    "guide": "AMBIENT. Lyrics (if any) must be minimal, mantra-like. Themes: inner peace, breath, stillness.",
+    "emotions": ["peaceful", "still", "meditative", "drifting"],
+    "vocal_style": "Whispered, echoing, wordless choirs",
+    "lyric_structure": "[Intro]\n[Verse - Whisper]\n[Chorus - Mantra]\n[Outro - Fade]",
     "matrix_variables": {
       "characters": [
-        "A meditating monk in absolute stillness",
+        "A meditating monk in stillness",
         "Someone floating aimlessly in calm water",
         "A wanderer finding peace in the woods",
-        "A person waking up from a deep, healing sleep",
-        "A silent observer of the natural world",
-        "Someone releasing a grief they've been carrying for years",
-        "A person learning to exist without constant noise",
-        "An insomniac who finally finds rest in the sound of rain"
+        "An insomniac finding rest"
       ],
       "settings": [
-        "in a misty, green bamboo forest",
-        "on the shore of a calm, dark ocean at night",
-        "sitting beside a slowly trickling stream",
-        "in a quiet room filled with morning light",
-        "on a mountain peak above the clouds",
-        "floating in a sensory deprivation tank in total silence",
-        "in a greenhouse at midnight surrounded by breathing plants",
-        "on a long flight over an ocean with clouds below and stars above"
+        "in a misty bamboo forest",
+        "on the shore of a dark ocean at night",
+        "sitting beside a trickling stream",
+        "on a mountain peak above the clouds"
       ],
       "conflicts": [
         "releasing the need to control the future",
-        "letting worries dissolve into the silence",
         "finding stillness in a rushing world",
-        "embracing the beauty of impermanence",
-        "focusing entirely on the rhythm of breath",
-        "learning to sit with uncertainty instead of running from it",
-        "the slow dissolution of a boundary between self and everything else",
-        "finding beauty in a silence most people are afraid of"
+        "focusing entirely on the breath",
+        "letting worries dissolve into silence"
       ],
       "objects_of_focus": [
         "a smooth river stone",
         "a single leaf falling slowly",
         "a ripple spreading across water",
-        "a grain of sand",
-        "a beam of soft light",
-        "a single candle flame barely moving in still air",
-        "the sound of breath slowing down after a long cry",
-        "morning mist dissolving as the sun rises above the trees"
+        "a single candle flame"
       ]
     },
     "topics": [
       "The space between thoughts",
-      "Waking up before the world gets loud",
       "Letting go of something heavy",
-      "Finding stillness in a crowded life",
-      "Time moving differently when you stop rushing"
+      "Finding stillness",
+      "Waking up before the world gets loud"
     ]
   },
   "christmas": {
-    "keywords": [
-      "christmas",
-      "holiday",
-      "xmas",
-      "carol",
-      "winter",
-      "new year",
-      "festive"
-    ],
-    "guide": "CHRISTMAS / HOLIDAY music. Lyrics MUST feel warm, joyful, and celebratory. Themes: family gathering, snow, giving, gratitude, love during holidays, nostalgia.",
-    "emotions": [
-      "festive",
-      "warm",
-      "nostalgic",
-      "joyful",
-      "cozy"
-    ],
-    "vocal_style": "Warm, cheerful, classic crooner, choral backups",
-    "lyric_structure": "[Intro]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Outro - Bells ringing]",
+    "keywords": ["christmas", "holiday", "xmas", "winter"],
+    "guide": "CHRISTMAS. Lyrics MUST feel warm and joyful. Themes: family, snow, giving, love during holidays.",
+    "emotions": ["festive", "warm", "nostalgic", "joyful"],
+    "vocal_style": "Warm, cheerful, classic crooner, choral",
+    "lyric_structure": "[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Outro]",
     "matrix_variables": {
       "characters": [
         "A child trying to stay awake for Santa",
-        "A family reuniting after a year apart",
-        "Someone traveling a long distance to get home",
-        "A person remembering their late grandparents",
-        "Two neighbors exchanging a small gift",
-        "A child placing cookies out with absolute faith",
-        "Someone spending Christmas alone who decides to make it beautiful anyway",
-        "A volunteer at a shelter who gives without expecting anything back"
+        "A family reuniting after a year",
+        "Someone traveling a long distance home",
+        "Two neighbors exchanging a gift"
       ],
       "settings": [
-        "in a cozy living room with a lit fireplace",
-        "walking through a town square covered in snow",
-        "looking out a frosted window at falling snow",
-        "sitting around a large dining table full of food",
-        "on a train heading home for the holidays",
-        "on a quiet Christmas Eve street with fresh snow and no footprints",
-        "in a hospital room decorated with a small plastic tree",
-        "at a midnight mass where strangers sing the same hymn"
+        "in a cozy living room with a fireplace",
+        "walking through a town square in snow",
+        "looking out a frosted window",
+        "on a train heading home"
       ],
       "conflicts": [
-        "finding the true meaning of Christmas beyond gifts",
-        "the bittersweet feeling of missing someone during the holidays",
-        "the magic of believing in kindness and wonder",
-        "creating new traditions while honoring the old",
-        "feeling the warmth of love on a freezing night",
-        "finding joy in a year that didn't give you much to celebrate",
-        "keeping magic alive for children when you've stopped believing yourself",
-        "reconciling with family after years of distance"
+        "finding the true meaning of Christmas",
+        "the bittersweet feeling of missing someone",
+        "feeling the warmth of love on a cold night",
+        "creating new traditions"
       ],
       "objects_of_focus": [
         "a beautifully wrapped present",
         "a glowing star on top of a tree",
-        "a sprig of mistletoe",
         "a warm mug of hot chocolate",
-        "silver sleigh bells",
-        "a handmade ornament a child gave you years ago",
-        "candles lit in a window for someone who hasn't come home yet",
-        "a card that arrived three days after Christmas with an apology inside"
+        "silver sleigh bells"
       ]
     },
     "topics": [
-      "The first Christmas without someone you loved",
       "Coming home after a year away",
+      "The warmth of a crowded room",
       "A small gift that meant everything",
-      "Keeping a tradition that outlasted everything else",
-      "The warmth of a crowded room in winter"
+      "Keeping magic alive"
     ]
   },
   "kids": {
-    "keywords": [
-      "kids",
-      "children",
-      "nursery",
-      "lullaby",
-      "bedtime",
-      "toddler",
-      "educational"
-    ],
-    "guide": "CHILDREN / KIDS music. Lyrics MUST be simple, fun, and age-appropriate. Themes: animals, colors, friendship, learning, adventure, bedtime. Use playful rhyming.",
-    "emotions": [
-      "playful",
-      "happy",
-      "curious",
-      "silly",
-      "innocent"
-    ],
-    "vocal_style": "Bright, enthusiastic, clear enunciation, gentle, character voices",
-    "lyric_structure": "[Intro]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Outro]",
+    "keywords": ["kids", "children", "nursery", "lullaby"],
+    "guide": "KIDS. Lyrics MUST be simple and fun. Themes: animals, colors, friendship, adventure, bedtime.",
+    "emotions": ["playful", "happy", "curious", "silly"],
+    "vocal_style": "Bright, enthusiastic, gentle",
+    "lyric_structure": "[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Outro]",
     "matrix_variables": {
       "characters": [
-        "A brave little puppy exploring the yard",
+        "A brave little puppy exploring",
         "A friendly dinosaur who loves to dance",
-        "A curious child asking a million questions",
-        "A sleepy bear getting ready for winter",
-        "A superhero whose power is kindness",
-        "A little girl who thinks she can talk to animals",
-        "A boy building the world's greatest blanket fort",
-        "Two best friends who have completely different superpowers"
+        "A curious child asking questions",
+        "A sleepy bear getting ready for winter"
       ],
       "settings": [
-        "in a magical, colorful playground",
-        "inside a cozy bedroom made of pillows",
-        "in a garden where the flowers sing",
-        "on a spaceship made out of cardboard boxes",
+        "in a magical playground",
+        "inside a cozy blanket fort",
         "in a sunny meadow full of butterflies",
-        "in a magical treehouse that appears only at sunset",
-        "underwater in an ocean full of talking sea creatures",
-        "in a bakery where everything you bake turns into something alive"
+        "underwater with talking sea creatures"
       ],
       "conflicts": [
         "learning that making mistakes is okay",
-        "overcoming the fear of the dark at bedtime",
-        "discovering how to share toys with a friend",
-        "figuring out the names of all the colors",
-        "going on an adventure and finding the way home",
-        "learning that asking for help is actually the bravest thing",
-        "finding the courage to try again after a big fall",
-        "discovering that being different is exactly what makes you special"
+        "overcoming the fear of the dark",
+        "discovering how to share toys",
+        "finding the courage to try again"
       ],
       "objects_of_focus": [
         "a shiny red balloon",
-        "a favorite stuffed teddy bear",
+        "a stuffed teddy bear",
         "a box of bright crayons",
-        "a soft bedtime blanket",
-        "a glowing firefly",
-        "a magic crayon that draws things into existence",
-        "a backpack that holds way more than it should",
-        "a night-light shaped like a tiny moon"
+        "a night-light shaped like a moon"
       ]
     },
     "topics": [
-      "A puppy's first adventure outside",
-      "Learning that making mistakes is part of growing",
-      "The bravest little thing you ever did",
-      "A blanket fort that became a whole world",
-      "Finding a best friend in the most unexpected place"
+      "A puppy's first adventure",
+      "Learning that mistakes are okay",
+      "A blanket fort world",
+      "Finding a best friend"
     ]
   },
   "motivational": {
-    "keywords": [
-      "motivational",
-      "motivation",
-      "uplifting",
-      "inspirational",
-      "empowerment",
-      "confidence",
-      "success",
-      "gym",
-      "workout"
-    ],
-    "guide": "MOTIVATIONAL / INSPIRATIONAL music. Lyrics MUST feel powerful and energizing. Themes: rising up, never giving up, believing in yourself, chasing dreams, inner strength.",
-    "emotions": [
-      "empowered",
-      "determined",
-      "unstoppable",
-      "focused",
-      "intense"
-    ],
-    "vocal_style": "Commanding, gritty, powerful, loud, anthemic",
-    "lyric_structure": "[Intro - Build up]\n[Verse 1]\n[Pre-Chorus]\n[Chorus - Explodes]\n[Verse 2]\n[Chorus]\n[Bridge - Drop]\n[Big Chorus]\n[Outro]",
+    "keywords": ["motivational", "uplifting", "empowerment", "workout"],
+    "guide": "MOTIVATIONAL. Lyrics MUST feel powerful and energizing. Themes: rising up, never giving up, inner strength.",
+    "emotions": ["empowered", "determined", "unstoppable", "focused"],
+    "vocal_style": "Commanding, gritty, powerful, anthemic",
+    "lyric_structure": "[Verse 1]\n[Pre-Chorus]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Outro]",
     "matrix_variables": {
       "characters": [
-        "An athlete training before the sun comes up",
+        "An athlete training before sunrise",
         "An underdog who was told they would fail",
         "Someone rising after hitting rock bottom",
-        "An entrepreneur risking everything on a dream",
-        "A survivor showing their scars with pride",
-        "A single parent working two jobs while chasing a dream",
-        "A comeback athlete running their first race after injury",
-        "A community organizer who refuses to let the neighborhood give up"
+        "A survivor showing scars with pride"
       ],
       "settings": [
-        "in an empty, echoing gymnasium",
-        "looking at reflection in a locker room mirror",
-        "standing at the starting line of a race",
-        "in a dark office working late into the night",
-        "at the bottom of a steep, massive mountain",
-        "on a track at 5 AM before the rest of the world wakes up",
-        "in a physical therapy room taking the first painful step",
-        "at a graduation where nobody expected you to make it"
+        "in an empty gymnasium",
+        "looking in a locker room mirror",
+        "at the starting line of a race",
+        "at the bottom of a massive mountain"
       ],
       "conflicts": [
-        "pushing past the physical breaking point",
-        "turning fear and doubt into absolute fuel",
-        "refusing to quit when everything goes wrong",
-        "building greatness one painful step at a time",
-        "winning the battle inside the mind first",
-        "choosing to keep going when the results aren't showing yet",
-        "silencing the internal voice that says you don't deserve this",
-        "building something meaningful when everyone said the timing was wrong"
+        "pushing past the breaking point",
+        "turning fear and doubt into fuel",
+        "refusing to quit when things go wrong",
+        "winning the battle inside the mind"
       ],
       "objects_of_focus": [
-        "a single drop of sweat falling to the floor",
+        "a single drop of sweat",
         "a heavy iron weight",
         "a ticking stopwatch",
-        "a gold medal",
-        "a clenched fist",
-        "a finish line tape broken by someone who almost didn't start",
-        "a vision board that's slowly becoming reality",
-        "worn-out shoes that carried you further than you thought possible"
+        "a clenched fist"
       ]
     },
     "topics": [
-      "Rising before the sun to build something",
+      "Rising before the sun",
       "The comeback no one saw coming",
-      "Turning every no into fuel",
-      "The version of you that refused to quit",
-      "A year of hard work becoming one perfect moment"
+      "Turning every 'no' into fuel",
+      "The version of you that refused to quit"
     ]
   },
   "afrobeats": {
-    "keywords": [
-      "afrobeats",
-      "afro pop",
-      "afropop",
-      "amapiano",
-      "afro",
-      "afro soul",
-      "highlife",
-      "juju"
-    ],
-    "guide": "AFROBEATS / AFRO POP music. Lyrics MUST feel vibrant, celebratory, and full of life. Themes: love, dancing, community, freedom, identity, joy. Use rhythmic, playful language with repetition.",
-    "emotions": [
-      "joyful",
-      "energetic",
-      "romantic",
-      "celebratory",
-      "free"
-    ],
-    "vocal_style": "Smooth, percussive delivery, call-and-response, warm harmonies, natural vibrato",
-    "lyric_structure": "Intro\nVerse 1\nChorus\nVerse 2\nChorus\nBridge\nChorus\nOutro",
+    "keywords": ["afrobeats", "afro pop", "amapiano", "highlife"],
+    "guide": "AFROBEATS. Lyrics MUST feel vibrant and celebratory. Themes: love, dancing, community, joy. Use repetitive rhythms.",
+    "emotions": ["joyful", "energetic", "romantic", "celebratory"],
+    "vocal_style": "Smooth, percussive delivery, warm harmonies",
+    "lyric_structure": "[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Outro]",
     "matrix_variables": {
       "characters": [
-        "Two people falling in love at a street festival",
-        "Someone dancing away the pain of a long week",
-        "A person celebrating their culture with pride",
-        "A couple whose love is the talk of the neighborhood",
-        "A traveler reconnecting with their roots",
-        "A diaspora kid reconnecting with their African roots through music",
-        "A woman who dances like the whole world is watching and doesn't care",
-        "A musician blending traditional rhythms with modern production"
+        "Two people falling in love at a festival",
+        "Someone dancing away the pain",
+        "A person celebrating their culture",
+        "A traveler reconnecting with roots"
       ],
       "settings": [
-        "on a sun-soaked Lagos rooftop at sunset",
+        "on a sun-soaked Lagos rooftop",
         "in the middle of a colorful street carnival",
-        "at a backyard party with a DJ and string lights",
-        "on a dusty dance floor in a crowded local club",
-        "under a mango tree with family gathered around",
-        "at a packed Afrobeats concert where the whole crowd knows every word",
-        "in a colorful outdoor market where vendors dance between customers",
-        "on a beach at sunset with a speaker and nowhere to be"
+        "at a backyard party with a DJ",
+        "on a dusty dance floor in a local club"
       ],
       "conflicts": [
-        "choosing to stay present and celebrate instead of worrying",
-        "a love too big to keep quiet about",
-        "finding home in a place far from where you grew up",
-        "holding onto culture while living in a new world",
-        "a relationship others disapprove of but feels completely right",
-        "bridging two worlds that don't always understand each other",
-        "love that speaks different languages but moves to the same rhythm",
-        "carrying ancestral joy forward into a world that tried to take it"
+        "choosing to celebrate instead of worrying",
+        "a love too big to keep quiet",
+        "finding home in a place far away",
+        "bridging two worlds together"
       ],
       "objects_of_focus": [
-        "a brightly colored kente cloth",
-        "a cold bottle being passed around the circle",
-        "a phone playing the song that started everything",
+        "a brightly colored cloth",
         "bare feet on warm earth",
-        "a handshake that means I see you",
-        "a drum pattern that echoes something ancient",
-        "a gele tied perfectly for a celebration nobody wanted to miss",
-        "bare feet finding the rhythm before the mind catches up"
+        "a phone playing a favorite song",
+        "a cold drink passed around"
       ]
     },
     "topics": [
-      "A love that the whole neighborhood knows about",
       "Dancing until the worry disappears",
+      "A love the whole neighborhood knows",
       "Culture carried in the body",
-      "A reunion that felt like coming alive again",
       "The joy of being exactly where you belong"
     ]
   },
   "dangdut_koplo": {
-    "keywords": [
-      "dangdut koplo",
-      "koplo",
-      "dangdut",
-      "horeg",
-      "kendang koplo",
-      "kendang",
-      "orgen tunggal",
-      "organ tunggal",
-      "electone",
-      "dangdutan",
-      "dangdut hot",
-      "om dangdut",
-      "dangdut jawa"
-    ],
-    "guide": "DANGDUT KOPLO music — genre musik Indonesia asli. WAJIB pakai instrumen ASLI dangdut: kendang koplo (ketukan cepat bertubi-tubi), gitar listrik cengkreng, bass elektrik gemuk, keyboard/electone, suling/seruling Jawa (opsional), terompet (opsional). JANGAN pakai: EDM, synthesizer modern, drum machine elektronik, trap beat. Lirik HARUS dalam Bahasa Indonesia atau campuran Indonesia-Jawa (cinta, rindu, patah hati, pesta, gembira). Gaya vokal: cengkok dangdut, melisma, improvisasi vokal khas. Energi: meriah, goyang, penuh semangat, kadang galau. Pantun/gurindam boleh dipakai di intro atau bridge.",
-    "emotions": [
-      "meriah",
-      "goyang",
-      "galau",
-      "semangat",
-      "rindu",
-      "cinta",
-      "bahagia"
-    ],
-    "vocal_style": "Cengkok dangdut, melisma khas, improvisasi vokal, suara lantang ekspresif, kadang falsetto",
-    "lyric_structure": "[Intro]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Interlude - kendang solo]\n[Chorus]\n[Outro]",
+    "keywords": ["dangdut koplo", "koplo", "dangdut", "kendang koplo"],
+    "guide": "DANGDUT KOPLO. Instrumen WAJIB: kendang koplo, gitar listrik, bass, keyboard. Tema: cinta, rindu, patah hati tapi tetap goyang. Lirik: Hindari bahasa kaku/puitis berlebihan agar natural.",
+    "emotions": ["meriah", "goyang", "galau", "semangat"],
+    "vocal_style": "Cengkok dangdut, suara lantang ekspresif",
+    "lyric_structure": "[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Interlude kendang]\n[Chorus]\n[Outro]",
     "matrix_variables": {
       "characters": [
         "Perantau yang rindu kampung halaman",
-        "Kekasih yang menunggu di pelabuhan",
-        "Perempuan yang ditinggal pergi tanpa pamit",
-        "Lelaki yang jatuh cinta pada pandangan pertama",
-        "Pedagang kaki lima yang bernyanyi di malam hari",
-        "Pengantin baru yang bersuka cita",
-        "Seorang ibu yang mendoakan anaknya merantau",
-        "Sepasang kekasih yang berpisah karena restu orang tua"
+        "Orang patah hati yang pelampiasannya joget",
+        "Kekasih yang menunggu tanpa kepastian",
+        "Pedagang kaki lima yang bernyanyi malam hari"
       ],
       "settings": [
-        "di panggung dangdut pinggir jalan yang ramai",
-        "di atas kapal feri dengan angin laut",
-        "di pasar malam yang penuh lampu warna-warni",
-        "di balai desa saat hajatan pernikahan",
-        "di gubuk kecil tepi sawah saat senja",
-        "di atas bus malam dengan penumpang mengantuk",
-        "di pelabuhan saat kapal hendak berangkat",
-        "di lapangan terbuka saat organ tunggal bermain"
+        "di panggung dangdut pinggir jalan",
+        "di pasar malam yang penuh lampu",
+        "di balai desa saat hajatan",
+        "di atas bus malam yang melaju"
       ],
       "conflicts": [
-        "cinta yang tidak direstui orang tua",
-        "kerinduan pada kampung setelah bertahun merantau",
-        "patah hati karena kekasih memilih orang lain",
-        "kesetiaan yang diuji jarak dan waktu",
-        "memilih antara cinta dan tanggung jawab keluarga",
-        "kegembiraan pesta yang menyembunyikan kesedihan dalam hati",
-        "rindu yang tak bisa diucapkan lewat kata-kata biasa",
-        "cinta segi tiga yang memperumit segalanya"
+        "cinta yang terhalang restu atau harta",
+        "patah hati tapi harus tetap kerja keras",
+        "kerinduan pada kampung setelah lama merantau",
+        "ditinggal pas lagi sayang-sayangnya"
       ],
       "objects_of_focus": [
-        "kendang yang ditabuh semakin keras",
-        "selendang merah yang berkibar di panggung",
-        "foto kekasih di dompet yang lusuh",
-        "lampu sorot panggung yang silau",
-        "surat cinta yang tak pernah terkirim",
-        "cincin emas pemberian almarhum ibu",
-        "kapal yang berlayar meninggalkan dermaga",
-        "kembang api di langit malam hajatan"
+        "kendang yang ditabuh kencang",
+        "foto mantan di dompet",
+        "lampu panggung warna-warni",
+        "segelas kopi di pinggir jalan"
       ]
     },
     "topics": [
-      "Rindu kekasih yang jauh di perantauan",
-      "Patah hati tapi tetap goyang di panggung",
-      "Cinta yang tak direstui tapi tetap setia",
-      "Kegembiraan pesta pernikahan di kampung",
-      "Pulang kampung setelah bertahun merantau"
+      "Patah hati tapi tetap goyang",
+      "Kerja keras demi modal nikah",
+      "Rindu kampung halaman",
+      "Ditinggal nikah mantan"
     ]
   },
   "campur_sari": {
-    "keywords": [
-      "campursari",
-      "campur sari",
-      "campusari",
-      "jawa modern",
-      "gamelan pop",
-      "langgam modern",
-      "kroncong jawa",
-      "tembang kreasi",
-      "keroncong campursari",
-      "jawa kontemporer"
-    ],
-    "guide": "CAMPUR SARI music — perpaduan gamelan Jawa dengan pop/kroncong modern. Instrumen khas: gamelan (saron, bonang, kenong, gong), kendang Jawa, gitar akustik, bass, keyboard bernuansa gamelan, suling Jawa, biola (opsional). TIDAK pakai: drum elektronik, EDM synth, bass horeg. Lirik HARUS dalam Bahasa Jawa (ngoko atau krama) atau campuran Jawa-Indonesia. Gaya vokal: sinden modern, cengkok tembang Jawa, lembut dan merdu. Tema: cinta, kerinduan, alam Jawa, filosofi hidup, kesetiaan. Skala pentatonik Jawa (slendro/pelog) terasa di melodi. Pantun/purwakanthi Jawa sangat dianjurkan.",
-    "emotions": [
-      "sendu",
-      "lembut",
-      "rindu",
-      "teduh",
-      "syahdu",
-      "gembira",
-      "khidmat"
-    ],
-    "vocal_style": "Sinden modern, cengkok tembang Jawa, lembut, merdu, vibrasi halus khas Jawa",
-    "lyric_structure": "[Intro - gamelan]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Interlude - suling Jawa]\n[Bridge]\n[Outro]",
+    "keywords": ["campursari", "gamelan pop", "langgam modern"],
+    "guide": "CAMPUR SARI. Perpaduan gamelan Jawa dan instrumen pop (gitar, keyboard). Lirik: Bahasa santai/sehari-hari. Jangan paksa AI pakai Krama Inggil agar lirik tetap mengalir dan logis. Tema: rindu, cinta.",
+    "emotions": ["sendu", "syahdu", "rindu", "teduh"],
+    "vocal_style": "Lembut, merdu, sedikit cengkok Jawa",
+    "lyric_structure": "[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Bridge]\n[Outro]",
     "matrix_variables": {
       "characters": [
-        "Pemuda Jawa yang merantau ke kota besar",
-        "Perempuan desa yang menunggu kekasih pulang",
-        "Petani yang bersyukur saat panen tiba",
-        "Seorang ibu yang mengajari anaknya tembang Jawa",
-        "Pengantin Jawa di malam midodareni",
-        "Seorang sepuh yang bernostalgia masa muda",
-        "Pasangan muda yang berjanji di tepi sawah",
-        "Pedagang batik yang merindukan tanah kelahiran"
+        "Pemuda yang merantau ke kota",
+        "Orang desa yang merindukan kekasihnya",
+        "Seseorang yang mengingat masa lalu",
+        "Pasangan yang berjanji setia"
       ],
       "settings": [
-        "di pendopo joglo saat bulan purnama",
-        "di tepi sawah hijau waktu pagi hari",
-        "di pasar seni Jawa yang ramai",
-        "di rumah joglo yang sunyi saat hujan",
-        "di panggung wayang orang ketika malam tiba",
-        "di ladang tembakau dengan kabut tipis pagi",
-        "di pinggir kali kecil yang mengalir tenang",
-        "di bawah pohon beringin besar di alun-alun"
+        "di teras rumah saat hujan turun",
+        "di tepi sawah hijau waktu pagi",
+        "di stasiun kereta saat berpisah",
+        "di bawah pohon beringin alun-alun"
       ],
       "conflicts": [
-        "kerinduan tanah Jawa saat jauh merantau",
-        "cinta yang harus mengikuti adat dan restu sesepuh",
-        "mempertahankan tradisi di tengah arus modernisasi",
-        "janji yang belum sempat ditepati",
-        "kesetiaan yang diuji oleh godaan kehidupan kota",
-        "rindu ibu yang sudah tiada",
-        "memilih antara karir di kota atau pulang ke desa",
-        "cinta pertama yang terpaksa direlakan"
+        "kerinduan yang sangat berat pada kampung",
+        "janji setia yang belum bisa ditepati",
+        "mengingat kenangan manis yang sudah berlalu",
+        "jarak kota dan desa yang memisahkan"
       ],
       "objects_of_focus": [
-        "gamelan yang berbunyi lirih di pendopo",
-        "batik tulis bermotif kawung",
-        "suling yang meliuk di antara bunyi gong",
-        "caping petani yang tersandar di pematang",
-        "blangkon yang dipakai sejak remaja",
-        "kembang melati yang ditabur di jalan",
-        "kendi air dari tanah liat yang dingin",
-        "pelepah pisang hijau di pinggir sungai"
+        "suara gamelan dari kejauhan",
+        "stasiun kereta api",
+        "rintik hujan di genteng",
+        "surat cinta lama"
       ]
     },
     "topics": [
-      "Kangen tanah Jawa saat merantau jauh",
-      "Cinta dalam balutan adat dan tradisi",
-      "Keindahan alam pedesaan Jawa yang teduh",
-      "Janji setia di bawah pohon beringin",
-      "Ibu dan tembang pengantar tidur masa kecil"
+      "Kangen tanah kelahiran",
+      "Janji setia di stasiun kereta",
+      "Mengingat cinta pertama di desa",
+      "Keindahan alam pedesaan"
     ]
   },
   "langgam_jawa": {
-    "keywords": [
-      "langgam jawa",
-      "langgam",
-      "tembang jawa",
-      "tembang macapat",
-      "keroncong jawa",
-      "gamelan",
-      "sinden",
-      "slendro",
-      "pelog",
-      "tembang",
-      "gendhing",
-      "gending jawa",
-      "karawitan"
-    ],
-    "guide": "LANGGAM JAWA / TEMBANG JAWA — musik tradisional Jawa paling murni. Instrumen WAJIB: gamelan lengkap (saron, bonang, kenong, kempul, gong ageng), kendang Jawa, suling Jawa, rebab (biola tradisional Jawa). TIDAK BOLEH ada: gitar elektrik, EDM, drum modern, bass horeg, synthesizer. Keyboard hanya jika meniru bunyi gamelan (tidak pop). Lirik HARUS dalam Bahasa Jawa Krama Inggil atau Ngoko halus. Gaya vokal: sinden asli, cengkok macapat, dhawah, wirama tembang. Skala WAJIB pentatonik Jawa: slendro (1-2-3-5-6) atau pelog (1-2-3-4-5-6-7). Tema: falsafah hidup Jawa, alam, spiritualitas, cinta lembut, kerinduan. Purwakanthi (rima Jawa) dan tembang macapat sangat dianjurkan.",
-    "emotions": [
-      "khidmat",
-      "syahdu",
-      "teduh",
-      "hening",
-      "lembut",
-      "sendu",
-      "agung"
-    ],
-    "vocal_style": "Sinden murni, cengkok macapat, dhawah tembang, vibrasi lembut panjang, suara halus dan dalam",
-    "lyric_structure": "[Buka - gamelan intro]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Interlude - rebab/suling]\n[Outro - gamelan fade]",
+    "keywords": ["langgam jawa", "tembang jawa", "gamelan", "sinden"],
+    "guide": "LANGGAM JAWA. Musik tradisional Jawa tenang. Instrumen: gamelan, kendang, suling. Gaya vokal: Sinden/lembut. Lirik: Bahasa Jawa sederhana yang puitis. Jangan minta aturan rima kompleks/macapat murni agar AI tidak menghasilkan teks yang tidak masuk akal.",
+    "emotions": ["khidmat", "syahdu", "teduh", "hening"],
+    "vocal_style": "Sinden, vibrasi lembut, suara halus",
+    "lyric_structure": "[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Outro]",
     "matrix_variables": {
       "characters": [
-        "Seorang sinden yang bernyanyi di hadapan sesepuh",
-        "Raja Jawa yang merenungi takdir di keraton",
-        "Dukuh tua yang mengajarkan falsafah hidup",
-        "Pemuda yang belajar nembang dari kakeknya",
-        "Penari bedaya yang berdoa sebelum pentas",
-        "Seorang petani yang bersyukur di ladangnya",
-        "Ibu yang menidurkan bayi dengan tembang lembut",
-        "Dalang yang bersiap untuk pagelaran wayang malam"
+        "Seseorang yang merenungi kehidupan",
+        "Petani yang bersyukur atas panen",
+        "Ibu yang menidurkan anaknya",
+        "Orang tua yang memberikan nasihat"
       ],
       "settings": [
-        "di keraton Yogyakarta saat upacara adat",
-        "di pendopo agung berhiaskan ukiran kayu jati",
-        "di lereng Gunung Merapi saat fajar",
-        "di ruang karawitan dengan gamelan berkilau",
-        "di tepi sungai Progo yang mengalir tenang",
-        "di bawah langit malam berbintang terang",
-        "di sawah yang membentang hijau tak bertepi",
-        "di pura dengan asap dupa yang mengepul"
+        "di pendopo rumah yang sepi",
+        "di lereng gunung saat fajar",
+        "di tepi sungai yang mengalir tenang",
+        "di bawah langit malam berbintang"
       ],
       "conflicts": [
-        "menapaki jalan hidup yang penuh ujian dengan sabar",
-        "menjaga warisan leluhur di era yang terus berubah",
-        "cinta yang tidak dapat bersatu karena perbedaan kasta",
-        "mencari ketenangan batin di tengah hiruk pikuk dunia",
-        "melepas sesuatu yang dicintai demi kebaikan bersama",
-        "rindu mendalam yang hanya bisa diungkap lewat tembang",
-        "menghadapi kematian dengan ketenangan dan keikhlasan",
-        "memilih jalan kebajikan ketika godaan datang bertubi"
+        "mencari ketenangan batin di dunia yang sibuk",
+        "menerima takdir dengan ikhlas",
+        "rindu yang diungkapkan lewat doa",
+        "menjaga kesabaran dalam ujian hidup"
       ],
       "objects_of_focus": [
-        "gong ageng yang berdentang pelan mengisi udara",
-        "rebab yang digesek dengan penuh perasaan",
-        "kemenyan yang dibakar sebelum pagelaran",
-        "wayang kulit yang tergantung berkilau",
-        "keris pusaka yang disimpan dengan penuh hormat",
-        "bunga kenanga yang ditabur di atas gamelan",
-        "blencong yang bergoyang menerangi layar putih",
-        "tangan dalang yang menari di antara cahaya"
+        "suara suling bambu",
+        "padi yang menguning",
+        "angin malam yang dingin",
+        "asap dupa atau kemenyan"
       ]
     },
     "topics": [
-      "Falsafah hidup Jawa: nrimo ing pandum",
-      "Keindahan alam Jawa yang agung dan sakral",
-      "Cinta yang tumbuh perlahan seperti bunga kenanga",
-      "Doa dan syukur kepada Sang Pencipta",
-      "Warisan leluhur yang wajib dijaga"
+      "Falsafah hidup nrimo ing pandum (ikhlas)",
+      "Doa dan syukur kepada pencipta",
+      "Keindahan alam yang menenangkan hati",
+      "Nasihat kehidupan yang damai"
     ]
   }
 }

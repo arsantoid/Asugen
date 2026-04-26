@@ -647,7 +647,7 @@
       "deep house",
       "future bass"
     ],
-    "guide": "EDM / ELECTRONIC music. Lyrics are SHORT: only 1 verse (2-4 lines) and 1 chorus (1-2 lines) MUST be euphoric, energetic, and danceable. Themes: freedom, dancing, connection, the night, unity, being alive. Use repetitive anthemic hooks.",
+    "guide": "EDM / ELECTRONIC music. Lyrics MUST be euphoric, energetic, and danceable. Themes: freedom, dancing, connection, the night, unity, being alive. Use repetitive anthemic hooks.",
     "emotions": [
       "euphoric",
       "energetic",
@@ -1561,6 +1561,237 @@
       "Culture carried in the body",
       "A reunion that felt like coming alive again",
       "The joy of being exactly where you belong"
+    ]
+  },
+  "dangdut_koplo": {
+    "keywords": [
+      "dangdut koplo",
+      "koplo",
+      "dangdut",
+      "horeg",
+      "kendang koplo",
+      "kendang",
+      "orgen tunggal",
+      "organ tunggal",
+      "electone",
+      "dangdutan",
+      "dangdut hot",
+      "om dangdut",
+      "dangdut jawa"
+    ],
+    "guide": "DANGDUT KOPLO music — genre musik Indonesia asli. WAJIB pakai instrumen ASLI dangdut: kendang koplo (ketukan cepat bertubi-tubi), gitar listrik cengkreng, bass elektrik gemuk, keyboard/electone, suling/seruling Jawa (opsional), terompet (opsional). JANGAN pakai: EDM, synthesizer modern, drum machine elektronik, trap beat. Lirik HARUS dalam Bahasa Indonesia atau campuran Indonesia-Jawa (cinta, rindu, patah hati, pesta, gembira). Gaya vokal: cengkok dangdut, melisma, improvisasi vokal khas. Energi: meriah, goyang, penuh semangat, kadang galau. Pantun/gurindam boleh dipakai di intro atau bridge.",
+    "emotions": [
+      "meriah",
+      "goyang",
+      "galau",
+      "semangat",
+      "rindu",
+      "cinta",
+      "bahagia"
+    ],
+    "vocal_style": "Cengkok dangdut, melisma khas, improvisasi vokal, suara lantang ekspresif, kadang falsetto",
+    "lyric_structure": "[Intro]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Interlude - kendang solo]\n[Chorus]\n[Outro]",
+    "matrix_variables": {
+      "characters": [
+        "Perantau yang rindu kampung halaman",
+        "Kekasih yang menunggu di pelabuhan",
+        "Perempuan yang ditinggal pergi tanpa pamit",
+        "Lelaki yang jatuh cinta pada pandangan pertama",
+        "Pedagang kaki lima yang bernyanyi di malam hari",
+        "Pengantin baru yang bersuka cita",
+        "Seorang ibu yang mendoakan anaknya merantau",
+        "Sepasang kekasih yang berpisah karena restu orang tua"
+      ],
+      "settings": [
+        "di panggung dangdut pinggir jalan yang ramai",
+        "di atas kapal feri dengan angin laut",
+        "di pasar malam yang penuh lampu warna-warni",
+        "di balai desa saat hajatan pernikahan",
+        "di gubuk kecil tepi sawah saat senja",
+        "di atas bus malam dengan penumpang mengantuk",
+        "di pelabuhan saat kapal hendak berangkat",
+        "di lapangan terbuka saat organ tunggal bermain"
+      ],
+      "conflicts": [
+        "cinta yang tidak direstui orang tua",
+        "kerinduan pada kampung setelah bertahun merantau",
+        "patah hati karena kekasih memilih orang lain",
+        "kesetiaan yang diuji jarak dan waktu",
+        "memilih antara cinta dan tanggung jawab keluarga",
+        "kegembiraan pesta yang menyembunyikan kesedihan dalam hati",
+        "rindu yang tak bisa diucapkan lewat kata-kata biasa",
+        "cinta segi tiga yang memperumit segalanya"
+      ],
+      "objects_of_focus": [
+        "kendang yang ditabuh semakin keras",
+        "selendang merah yang berkibar di panggung",
+        "foto kekasih di dompet yang lusuh",
+        "lampu sorot panggung yang silau",
+        "surat cinta yang tak pernah terkirim",
+        "cincin emas pemberian almarhum ibu",
+        "kapal yang berlayar meninggalkan dermaga",
+        "kembang api di langit malam hajatan"
+      ]
+    },
+    "topics": [
+      "Rindu kekasih yang jauh di perantauan",
+      "Patah hati tapi tetap goyang di panggung",
+      "Cinta yang tak direstui tapi tetap setia",
+      "Kegembiraan pesta pernikahan di kampung",
+      "Pulang kampung setelah bertahun merantau"
+    ]
+  },
+  "campur_sari": {
+    "keywords": [
+      "campursari",
+      "campur sari",
+      "campusari",
+      "jawa modern",
+      "gamelan pop",
+      "langgam modern",
+      "kroncong jawa",
+      "tembang kreasi",
+      "keroncong campursari",
+      "jawa kontemporer"
+    ],
+    "guide": "CAMPUR SARI music — perpaduan gamelan Jawa dengan pop/kroncong modern. Instrumen khas: gamelan (saron, bonang, kenong, gong), kendang Jawa, gitar akustik, bass, keyboard bernuansa gamelan, suling Jawa, biola (opsional). TIDAK pakai: drum elektronik, EDM synth, bass horeg. Lirik HARUS dalam Bahasa Jawa (ngoko atau krama) atau campuran Jawa-Indonesia. Gaya vokal: sinden modern, cengkok tembang Jawa, lembut dan merdu. Tema: cinta, kerinduan, alam Jawa, filosofi hidup, kesetiaan. Skala pentatonik Jawa (slendro/pelog) terasa di melodi. Pantun/purwakanthi Jawa sangat dianjurkan.",
+    "emotions": [
+      "sendu",
+      "lembut",
+      "rindu",
+      "teduh",
+      "syahdu",
+      "gembira",
+      "khidmat"
+    ],
+    "vocal_style": "Sinden modern, cengkok tembang Jawa, lembut, merdu, vibrasi halus khas Jawa",
+    "lyric_structure": "[Intro - gamelan]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Interlude - suling Jawa]\n[Bridge]\n[Outro]",
+    "matrix_variables": {
+      "characters": [
+        "Pemuda Jawa yang merantau ke kota besar",
+        "Perempuan desa yang menunggu kekasih pulang",
+        "Petani yang bersyukur saat panen tiba",
+        "Seorang ibu yang mengajari anaknya tembang Jawa",
+        "Pengantin Jawa di malam midodareni",
+        "Seorang sepuh yang bernostalgia masa muda",
+        "Pasangan muda yang berjanji di tepi sawah",
+        "Pedagang batik yang merindukan tanah kelahiran"
+      ],
+      "settings": [
+        "di pendopo joglo saat bulan purnama",
+        "di tepi sawah hijau waktu pagi hari",
+        "di pasar seni Jawa yang ramai",
+        "di rumah joglo yang sunyi saat hujan",
+        "di panggung wayang orang ketika malam tiba",
+        "di ladang tembakau dengan kabut tipis pagi",
+        "di pinggir kali kecil yang mengalir tenang",
+        "di bawah pohon beringin besar di alun-alun"
+      ],
+      "conflicts": [
+        "kerinduan tanah Jawa saat jauh merantau",
+        "cinta yang harus mengikuti adat dan restu sesepuh",
+        "mempertahankan tradisi di tengah arus modernisasi",
+        "janji yang belum sempat ditepati",
+        "kesetiaan yang diuji oleh godaan kehidupan kota",
+        "rindu ibu yang sudah tiada",
+        "memilih antara karir di kota atau pulang ke desa",
+        "cinta pertama yang terpaksa direlakan"
+      ],
+      "objects_of_focus": [
+        "gamelan yang berbunyi lirih di pendopo",
+        "batik tulis bermotif kawung",
+        "suling yang meliuk di antara bunyi gong",
+        "caping petani yang tersandar di pematang",
+        "blangkon yang dipakai sejak remaja",
+        "kembang melati yang ditabur di jalan",
+        "kendi air dari tanah liat yang dingin",
+        "pelepah pisang hijau di pinggir sungai"
+      ]
+    },
+    "topics": [
+      "Kangen tanah Jawa saat merantau jauh",
+      "Cinta dalam balutan adat dan tradisi",
+      "Keindahan alam pedesaan Jawa yang teduh",
+      "Janji setia di bawah pohon beringin",
+      "Ibu dan tembang pengantar tidur masa kecil"
+    ]
+  },
+  "langgam_jawa": {
+    "keywords": [
+      "langgam jawa",
+      "langgam",
+      "tembang jawa",
+      "tembang macapat",
+      "keroncong jawa",
+      "gamelan",
+      "sinden",
+      "slendro",
+      "pelog",
+      "tembang",
+      "gendhing",
+      "gending jawa",
+      "karawitan"
+    ],
+    "guide": "LANGGAM JAWA / TEMBANG JAWA — musik tradisional Jawa paling murni. Instrumen WAJIB: gamelan lengkap (saron, bonang, kenong, kempul, gong ageng), kendang Jawa, suling Jawa, rebab (biola tradisional Jawa). TIDAK BOLEH ada: gitar elektrik, EDM, drum modern, bass horeg, synthesizer. Keyboard hanya jika meniru bunyi gamelan (tidak pop). Lirik HARUS dalam Bahasa Jawa Krama Inggil atau Ngoko halus. Gaya vokal: sinden asli, cengkok macapat, dhawah, wirama tembang. Skala WAJIB pentatonik Jawa: slendro (1-2-3-5-6) atau pelog (1-2-3-4-5-6-7). Tema: falsafah hidup Jawa, alam, spiritualitas, cinta lembut, kerinduan. Purwakanthi (rima Jawa) dan tembang macapat sangat dianjurkan.",
+    "emotions": [
+      "khidmat",
+      "syahdu",
+      "teduh",
+      "hening",
+      "lembut",
+      "sendu",
+      "agung"
+    ],
+    "vocal_style": "Sinden murni, cengkok macapat, dhawah tembang, vibrasi lembut panjang, suara halus dan dalam",
+    "lyric_structure": "[Buka - gamelan intro]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Interlude - rebab/suling]\n[Outro - gamelan fade]",
+    "matrix_variables": {
+      "characters": [
+        "Seorang sinden yang bernyanyi di hadapan sesepuh",
+        "Raja Jawa yang merenungi takdir di keraton",
+        "Dukuh tua yang mengajarkan falsafah hidup",
+        "Pemuda yang belajar nembang dari kakeknya",
+        "Penari bedaya yang berdoa sebelum pentas",
+        "Seorang petani yang bersyukur di ladangnya",
+        "Ibu yang menidurkan bayi dengan tembang lembut",
+        "Dalang yang bersiap untuk pagelaran wayang malam"
+      ],
+      "settings": [
+        "di keraton Yogyakarta saat upacara adat",
+        "di pendopo agung berhiaskan ukiran kayu jati",
+        "di lereng Gunung Merapi saat fajar",
+        "di ruang karawitan dengan gamelan berkilau",
+        "di tepi sungai Progo yang mengalir tenang",
+        "di bawah langit malam berbintang terang",
+        "di sawah yang membentang hijau tak bertepi",
+        "di pura dengan asap dupa yang mengepul"
+      ],
+      "conflicts": [
+        "menapaki jalan hidup yang penuh ujian dengan sabar",
+        "menjaga warisan leluhur di era yang terus berubah",
+        "cinta yang tidak dapat bersatu karena perbedaan kasta",
+        "mencari ketenangan batin di tengah hiruk pikuk dunia",
+        "melepas sesuatu yang dicintai demi kebaikan bersama",
+        "rindu mendalam yang hanya bisa diungkap lewat tembang",
+        "menghadapi kematian dengan ketenangan dan keikhlasan",
+        "memilih jalan kebajikan ketika godaan datang bertubi"
+      ],
+      "objects_of_focus": [
+        "gong ageng yang berdentang pelan mengisi udara",
+        "rebab yang digesek dengan penuh perasaan",
+        "kemenyan yang dibakar sebelum pagelaran",
+        "wayang kulit yang tergantung berkilau",
+        "keris pusaka yang disimpan dengan penuh hormat",
+        "bunga kenanga yang ditabur di atas gamelan",
+        "blencong yang bergoyang menerangi layar putih",
+        "tangan dalang yang menari di antara cahaya"
+      ]
+    },
+    "topics": [
+      "Falsafah hidup Jawa: nrimo ing pandum",
+      "Keindahan alam Jawa yang agung dan sakral",
+      "Cinta yang tumbuh perlahan seperti bunga kenanga",
+      "Doa dan syukur kepada Sang Pencipta",
+      "Warisan leluhur yang wajib dijaga"
     ]
   }
 }

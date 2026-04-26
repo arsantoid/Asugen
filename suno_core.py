@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════════
-#  suno_core.py  —  ASUnoGEn
+#  suno_core.py  —  ASuGen
 #  Config, AI generation, Playwright browser engine, download utils
 #  Import otomatis dari suno_dialogs.py dan suno_app.py
 # ═══════════════════════════════════════════════════════════════════
@@ -48,7 +48,8 @@ APP_DIR = (Path(__file__).parent / "suno_profile_manager").resolve()
 DATA_DIR = APP_DIR / "profiles"
 CONFIG_FILE = APP_DIR / "profiles.json"
 AI_CONFIG_FILE = APP_DIR / "ai_config.json"
-APP_CONFIG_FILE = APP_DIR / "app_config.json"
+APP_CONFIG_FILE  = APP_DIR / "app_config.json"
+PROMPT_CFG_FILE  = APP_DIR / "prompt_config.json"   # Multi custom prompt
 SONGS_DIR    = Path(__file__).parent / "suno_songs"  # folder download lagu
 GENRES_FILE       = Path(__file__).parent / "genres.json"  # genre mapping eksternal
 DEEPSEEK_WEB_URL  = "https://chat.deepseek.com"            # DeepSeek web chat
@@ -61,12 +62,32 @@ DEFAULT_CHROME_PATHS = [
 SUNO_URL = "https://suno.com"
 MAX_CREATES = 5
 FREE_CREDITS_PER_CREATE = 10
-ASSUMED_CREDITS_PER_PROFILE = 50  # bulk: setiap profile dianggap punya 50 kredit
+ASSUMED_CREDITS_PER_PROFILE = 50
+MAX_SONGS_PER_PROFILE = 5          # maks 5 lagu per profil per hari  # bulk: setiap profile dianggap punya 50 kredit
 MIN_FULL_SONG_KB = 2000   # file < 2000 KB dianggap preview/clip, skip
-MIN_LYRICS_CHARS = 1000  # lirik < 1000 karakter dianggap gagal -> retry
+MIN_LYRICS_CHARS = 1500  # lirik < 1500 karakter dianggap gagal -> retry
 
-_stop_requested = threading.Event()
-stop_requested = _stop_requested  # public alias untuk wildcard import
+_stop_requested  = threading.Event()
+stop_requested   = _stop_requested   # public alias
+_pause_requested = threading.Event() # pause: berhenti sementara, Chrome tetap buka
+
+def request_pause():
+    """Set pause — automation dijeda, Chrome tidak ditutup."""
+    _pause_requested.set()
+
+def resume_generate():
+    """Clear pause — lanjutkan automation."""
+    _pause_requested.clear()
+
+def is_paused() -> bool:
+    return _pause_requested.is_set()
+
+def wait_if_paused(interval: float = 0.5):
+    """Block sampai resume. Cek stop tiap interval agar tidak hang."""
+    while _pause_requested.is_set():
+        if _stop_requested.is_set():
+            break
+        threading.Event().wait(interval)
 
 def get_stop_event() -> threading.Event:
     """Selalu kembalikan singleton _stop_requested dari suno_core."""
@@ -75,14 +96,44 @@ def get_stop_event() -> threading.Event:
 def request_stop():
     """Set stop flag — thread-safe dari manapun."""
     _stop_requested.set()
+    _pause_requested.clear()  # auto-resume agar tidak hang saat stop
 
 def clear_stop():
     """Clear stop flag — panggil sebelum mulai generate baru."""
     _stop_requested.clear()
+    _pause_requested.clear()
 
 def is_stop_requested() -> bool:
     """Cek apakah stop diminta."""
     return _stop_requested.is_set()
+
+def save_window_position(profile_dir: str, x: int, y: int):
+    """Simpan posisi window Chrome terakhir per-profile ke browser_cfg.json."""
+    try:
+        cfg_path = Path(profile_dir) / "browser_cfg.json"
+        cfg = {}
+        if cfg_path.exists():
+            try: cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+            except Exception: pass
+        cfg["window_x"] = int(x); cfg["window_y"] = int(y)
+        cfg_path.write_text(json.dumps(cfg, indent=2, ensure_ascii=False), encoding="utf-8")
+    except Exception:
+        pass
+
+def load_window_position(profile_dir: str):
+    """Load posisi window Chrome terakhir. Return (x, y) atau None."""
+    try:
+        cfg_path = Path(profile_dir) / "browser_cfg.json"
+        if cfg_path.exists():
+            cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+            x = cfg.get("window_x"); y = cfg.get("window_y")
+            if x is not None and y is not None:
+                return int(x), int(y)
+    except Exception:
+        pass
+    return None
+
+
 
 
 # ------------------------------------------------------------------
@@ -163,6 +214,77 @@ def load_app_config() -> dict:
 def save_app_config(cfg: dict):
     ensure_dirs()
     APP_CONFIG_FILE.write_text(json.dumps(cfg, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+# ══ Multi Custom Prompt Config ═══════════════════════════════════════════════
+# Struktur: list of prompt dicts → bisa simpan banyak prompt, pilih lewat UI
+_DEFAULT_PROMPT_CFG = {
+    "mode": "default",      # "default" | "custom"
+    "active_index": 0,      # index prompt custom yang aktif
+    "prompts": [
+        {
+            "label":     "Custom Prompt 1",
+            "system":    "",
+            "template":  "",
+        }
+    ],
+}
+
+def load_prompt_config() -> dict:
+    """Load multi-prompt config. Merge dengan default agar backward-compat."""
+    ensure_dirs()
+    try:
+        if PROMPT_CFG_FILE.exists():
+            raw = json.loads(PROMPT_CFG_FILE.read_text(encoding="utf-8"))
+            merged = dict(_DEFAULT_PROMPT_CFG)
+            merged.update(raw)
+            # Pastikan key 'prompts' adalah list
+            if not isinstance(merged.get("prompts"), list) or not merged["prompts"]:
+                merged["prompts"] = list(_DEFAULT_PROMPT_CFG["prompts"])
+            # FIX v5.44: Selalu mulai dalam mode Default saat buka app
+            # Prompt yang dibuat tetap tersimpan, hanya mode-nya di-reset
+            merged["mode"] = "default"
+            return merged
+    except Exception:
+        pass
+    return dict(_DEFAULT_PROMPT_CFG)
+
+def save_prompt_config(cfg: dict):
+    ensure_dirs()
+    PROMPT_CFG_FILE.write_text(json.dumps(cfg, indent=2, ensure_ascii=False), encoding="utf-8")
+
+def get_active_prompt() -> dict:
+    """Kembalikan prompt dict yang aktif. Return {} jika mode=default."""
+    cfg = load_prompt_config()
+    if cfg.get("mode") != "custom":
+        return {}
+    prompts = cfg.get("prompts", [])
+    idx = int(cfg.get("active_index", 0))
+    if not prompts:
+        return {}
+    idx = max(0, min(idx, len(prompts) - 1))
+    return prompts[idx]
+
+def _safe_prompt_format(template: str, description: str, style: str, index: int, total: int) -> str:
+    """Ganti {description} {style} {index} {total} SAJA, abaikan { } lain (JSON dll)."""
+    result = template
+    result = result.replace("{description}", description)
+    result = result.replace("{style}",       style)
+    result = result.replace("{index}",       str(index))
+    result = result.replace("{total}",       str(total))
+    return result
+
+def _generate_title_b(title_a: str, song_index: int = 1) -> str:
+    """Generate title_b yang natural dari title_a jika AI tidak kasih."""
+    import random as _rnd
+    _rnd.seed(hash(title_a + str(song_index)) % 2**32)
+    suffixes = [
+        "Late Night Mix", "Midnight Version", "Slow Burn",
+        "After Hours", "Chill Edit", "Soft Version",
+        "Rainy Mix", "Lo-Fi Edit", "Night Drive",
+    ]
+    return f"{title_a} - {_rnd.choice(suffixes)}"
+# ═════════════════════════════════════════════════════════════════════════════
 
 
 _genres_cache: dict = {}
@@ -372,12 +494,7 @@ def _parse_deepseek_response(raw):
             if su.startswith("TITLE_A:"):   title_a = s[8:].strip().strip("\"'")
             elif su.startswith("TITLE_B:"): title_b = s[8:].strip().strip("\"'")
             elif su.startswith("TITLE:") and not title_a: title_a = s[6:].strip().strip("\"'")
-            elif su.startswith("STYLE:"):
-                _rs = s[6:].strip().strip("\"'")
-                # Sanitize: buang URL (http/https) dari STYLE field
-                import re as _re2
-                _rs = _re2.sub(r"\[?https?://[^\]\s)]+\]?(?:\([^)]*\))?", "", _rs).strip()
-                style_out = _rs
+            elif su.startswith("STYLE:"):   style_out = s[6:].strip().strip("\"'")
             elif su.startswith("LYRICS:") or su == "LYRICS": in_lyrics = True
         else:
             lyrics_lines.append(line)
@@ -387,82 +504,426 @@ def _parse_deepseek_response(raw):
         title_a = first[0][:60] if first else "Untitled"
     if not title_b:
         w = title_a.split()
-        title_b = (" ".join(w[1:] + [w[0]]) if len(w) >= 2 else title_a + " II")
+        title_b = _generate_title_b(title_a)
     return {"title": title_a, "title_a": title_a, "title_b": title_b,
             "style": style_out, "lyrics": lyrics}
+
+def _sanitize_lyrics(lyrics: str) -> str:
+    """
+    1. Semua () → [] tanpa kecuali
+    2. Baris instrumen/musik plaintext → dibungkus [...]
+    3. Semua baris di [Outro] / [Intro] / [Instrumental Break] → dibungkus [...]
+    """
+    import re as _re
+
+    _SPEC = {
+        "guitar","bass","drum","drums","piano","violin","cello","synth","pad",
+        "acoustic","electric","fingerpick","fingerpicking","strum","pluck","solo",
+        "harmonica","trumpet","saxophone","sax","flute","horn","choir",
+        "reverb","sample","loop","riff","ambient","arpeggio","picking","mic",
+        "muffled","sparse","layered","wah","tremolo","distortion","overdriven",
+        "pedal","delay","arpeggiated","plucked","bowed","banjo","mandolin",
+        "ukulele","sitar","tabla","conga","bongo","marimba","xylophone","celesta",
+        "harpsichord","organ","accordion","bassoon","clarinet","tuba","trombone",
+        "snare","kick","hihat","cymbal","shaker","tambourine","pulsing",
+        "detuned","detune","fingerpicked","humming","hum","fading","crackle",
+        "crackles","slowing","building","continues","footstep","footsteps",
+        "gravel","whisper","whispering","breathing","exhale","sigh","rustle",
+        "breath","strings","fingers","tapping","taps","strumming","strums",
+        "plucking","picking","melody","melodies","chord","chords","note","notes",
+        "tune","tuning","ringing","fades","swells","rises","fades out",
+        "clicks","claps","clapping","stomp","stomping","tap",
+    }
+    _LYRIC = {
+        "collect","morning","light","dark","night","day","sky","rain","sun",
+        "heart","soul","love","dream","life","time","world","face","hand",
+        "eye","eyes","voice","word","words","door","window","floor","wall",
+        "memory","forget","remember","walk","run","stand","fall","rise",
+        "sleep","wake","feel","feels","know","knew","tell","say","said",
+        "cry","tears","smile","laugh","miss","lost","find","found",
+        "leave","left","stay","come","go","gone","back","old","new","last",
+        "first","cold","warm","empty","full","still","quiet","alone","together",
+        "always","never","maybe","only","once","again","away","down","across",
+        "between","before","after","through","city","street","road","house",
+        "home","room","town","river","clock","year","month","hour","moment",
+        "place","name","letter","story","color","shadow","hope","fear","pain",
+        "fire","water","stone","glass","paper","dust","smoke",
+    }
+    _PRON = [" i "," i'"," my "," me "," you "," your "," we ",
+             " she "," he "," they "," her "," him "," us "," our "]
+    # Section yang seluruh isinya adalah direction → wrap semua baris
+    _DIR_SECTIONS = {"outro","instrumental break","instrumental","intro","interlude"}
+
+    def _looks_music(line):
+        l = line.lower()
+        w = set(_re.sub(r'[^a-z ]', ' ', l).split())
+        m = w & _SPEC
+        if not m: return False
+        if any(p in " " + l + " " for p in _PRON): return False
+        lw = w & _LYRIC
+        if len(lw) >= len(m) + 2: return False
+        return True
+
+    lines_out = []
+    cur_section = ""
+
+    for line in lyrics.splitlines():
+        s = line.strip()
+        if not s:
+            lines_out.append(""); continue
+
+        # Deteksi section tag
+        sec_m = _re.match(r'^\[([^\]]+)\]$', s)
+        if sec_m:
+            cur_section = sec_m.group(1).lower()
+            lines_out.append(line); continue
+
+        # 1. Seluruh baris (...) → [...]
+        m1 = _re.fullmatch(r'\((.+)\)', s)
+        if m1:
+            inner = m1.group(1).strip()
+            inner = inner[0].upper() + inner[1:] if inner else inner
+            lines_out.append(f"[{inner}]"); continue
+
+        # 2. [Tag] (...) dalam 1 baris → [Tag - ...]
+        m2 = _re.match(r'^(\[[^\]]+\])\s+\((.+)\)\s*$', s)
+        if m2:
+            tag = m2.group(1)[:-1]
+            lines_out.append(f"{tag} - {m2.group(2).strip()}]"); continue
+
+        # 3. () di dalam [...] → hapus kurungnya
+        line = _re.sub(r'\[([^\]]*?)\(([^)]+)\)([^\]]*)\]',
+                       lambda m: f"[{m.group(1)}{m.group(2)}{m.group(3)}]", line)
+
+        # 4. () di mana saja → [...]
+        line = _re.sub(r'\(([^)]+)\)', lambda m: f"[{m.group(1).strip()}]", line)
+
+        s2 = line.strip()
+        already_bracket = s2.startswith('[') and s2.endswith(']')
+
+        # 5. Section direction ([Outro]/[Intro]/[Instrumental Break]) → wrap semua baris
+        if any(ds in cur_section for ds in _DIR_SECTIONS):
+            if not already_bracket:
+                line = f"[{s2}]"
+            lines_out.append(line); continue
+
+        # 6. Baris plaintext berisi instrumen di section lain
+        if not already_bracket and _looks_music(s2):
+            line = f"[{s2}]"
+
+        lines_out.append(line)
+
+    # Strip label rima A/B yang ikut tertulis DeepSeek di akhir baris
+    _AB_PAT = re.compile(r'\s+[AB]\s*$', re.IGNORECASE)
+    lines_out = [
+        _AB_PAT.sub("", ln) if not ln.strip().startswith("[") else ln
+        for ln in lines_out
+    ]
+
+    return "\n".join(lines_out)
+
+
+
 async def _deepseek_web_prepare_songs(context, config, log_cb, timeout_sec=120):
     import asyncio
     description  = config.get("description", "")
     quantity     = config.get("quantity", 1)
     instrumental = config.get("instrumental", False)
-    style_input  = config.get("style_override", "").strip()
-    _sl = (style_input or description).lower()
+    _lyric_source = config.get("lyric_source", "deepseek_web")
+    _is_mini     = (_lyric_source == "deepseek_web_mini")  # Mini: verse+outro only, no min chars
+    # "description" adalah key dari GenerateDialog & BulkCreateDialog
+    # "style_override" hanya dipakai di path lama — fallback ke description
+    style_input  = (config.get("style_override", "") or config.get("description", "")).strip()
+    _language    = (config.get("language", "") or "").strip()
+    _sl = (style_input or "").lower()  # style only, tanpa description
+    # ── Version marker (visible di terminal) ───────────────────────────────
+    _log_style = (style_input or "")[:50]
+    print(f"[ASuGen v5.40.1] _deepseek_web_prepare_songs | style='{_log_style}...'")
     _genre_db = load_genres()
     _genre_guide = ""
     _detected_style = style_input or ""
-    for _gname, _gdata in _genre_db.items():
-        if any(kw in _sl for kw in _gdata.get("keywords", [])):
-            _genre_guide = _gdata.get("guide", "")
-            if not _detected_style:
-                _detected_style = _gname.replace("_", " ").title()
-            break
-    if not _genre_guide:
-        _genre_guide = (
-            f"Music style: {style_input or description}. "
-            "Write lyrics that perfectly match this style's mood, energy, and culture."
-        )
-
-    # Ambil topics dari genres.json agar TOPIC bukan copy dari style tags
     import random as _rand
-    _song_topics = []
+
+    # ── Deteksi genre dari 2-4 frasa/kata PERTAMA style (split koma) ──────────
+    # Logika: split style by koma → cek frasa [0],[1],[2],[3] dari kiri
+    # Frasa pertama yang mengandung keyword genre = pemenang
+    # Tidak pakai description sama sekali
+    _sl_full = (style_input or "").lower().strip()
+
+    # Kumpulkan semua keyword → list, sort terpanjang dulu
+    _all_kw_genre = []
     for _gname, _gdata in _genre_db.items():
-        if any(kw in _sl for kw in _gdata.get("keywords", [])):
-            _song_topics = _gdata.get("topics", [])
-            break
+        for _kw in _gdata.get("keywords", []):
+            _all_kw_genre.append((_kw, _gname))
+    _all_kw_genre.sort(key=lambda x: len(x[0]), reverse=True)
+
+    def _detect_by_comma_parts(sl, kw_list, max_parts=4):
+        """Split by koma, cek tiap frasa dari kiri. Return genre pertama yang match."""
+        parts = [p.strip() for p in sl.split(",")]
+        for part in parts[:max_parts]:
+            for _kw, _gn in kw_list:
+                if _kw in part:
+                    return _gn
+        # Fallback: 4 kata pertama
+        four_words = " ".join(sl.split()[:4])
+        for _kw, _gn in kw_list:
+            if _kw in four_words:
+                return _gn
+        return None
+
+    _matched_genre_key = _detect_by_comma_parts(_sl_full, _all_kw_genre)
+
+    # Fallback: random genre
+    if not _matched_genre_key:
+        _matched_genre_key = _rand.choice(list(_genre_db.keys()))
+
+    print(f"[ASuGen] Genre detected: '{_matched_genre_key}' | style_start='{(_sl_full[:40])}'")
+    _matched_genre_data = _genre_db.get(_matched_genre_key, {})
+    _genre_guide = _matched_genre_data.get("guide", "") or (
+        f"Music style: {style_input or description}. "
+        "Write lyrics that perfectly match this style's mood, energy, and culture."
+    )
+    _detected_style = _matched_genre_key.replace("_", " ").title()
+    _mv              = _matched_genre_data.get("matrix_variables", {})
+    _mv_characters   = _mv.get("characters", [])
+    _mv_settings     = _mv.get("settings", [])
+    _mv_conflicts    = _mv.get("conflicts", [])
+    _mv_objects      = _mv.get("objects_of_focus", [])
+    _genre_emotions  = _matched_genre_data.get("emotions", [])
+    _genre_vocal     = _matched_genre_data.get("vocal_style", "")
+    _genre_lstruct   = _matched_genre_data.get("lyric_structure", "")
+
+    _use_matrix  = bool(_mv_characters and _mv_settings and _mv_conflicts and _mv_objects)
+    _song_topics = [] if _use_matrix else _matched_genre_data.get("topics", [])
+
     _available_topics = list(_song_topics)
-    # Jika topic kurang dari quantity, tambah dari genre lain
-    if len(_available_topics) < quantity:
-        for _gd in _genre_db.values():
-            for _t in _gd.get("topics", []):
-                if _t not in _available_topics:
-                    _available_topics.append(_t)
-    _rand.shuffle(_available_topics)
+    if not _use_matrix:
+        if len(_available_topics) < quantity:
+            for _gd in _genre_db.values():
+                for _t in _gd.get("topics", []):
+                    if _t not in _available_topics:
+                        _available_topics.append(_t)
+        _rand.shuffle(_available_topics)
+    else:
+        _matrix_combos = []
+        for _ in range(quantity):
+            _matrix_combos.append({
+                "character": _rand.choice(_mv_characters),
+                "setting"  : _rand.choice(_mv_settings),
+                "conflict" : _rand.choice(_mv_conflicts),
+                "object"   : _rand.choice(_mv_objects),
+            })
 
     songs = []
     for i in range(1, quantity + 1):
         if _stop_requested.is_set():
             break
         log_cb(f"[DS-WEB] [{i}/{quantity}] Membuat lirik lagu ke-{i}...")
-        detected = _detected_style or 'pop, emotional, female vocal'
-        _topic = (_available_topics[i-1]
-                  if _available_topics and i-1 < len(_available_topics)
-                  else (description or style_input))
+        # STYLE di output = input user verbatim (bukan nama genre DB)
+        detected = style_input or _detected_style or 'pop, emotional, female vocal'
+        if _use_matrix and _matrix_combos:
+            _mx      = _matrix_combos[i-1] if i-1 < len(_matrix_combos) else _rand.choice(_matrix_combos)
+            _mx_char    = _mx["character"]
+            _mx_setting = _mx["setting"]
+            _mx_conflict= _mx["conflict"]
+            _mx_object  = _mx["object"]
+            _topic = (
+                f"{_mx_char} located in {_mx_setting}. "
+                f"They are {_mx_conflict}."
+            )
+        else:
+            _mx_char = _mx_setting = _mx_conflict = _mx_object = ""
+            _topic = (_available_topics[i-1]
+                      if _available_topics and i-1 < len(_available_topics)
+                      else (description or style_input))
         _instr_note = (
             "THIS IS AN INSTRUMENTAL SONG. Do NOT write any lyrics.\n"
             "Leave the LYRICS section COMPLETELY EMPTY (just write the tag).\n"
         ) if instrumental else ""
-        prompt = (
-            f"You are a professional songwriter. Write song #{i} of {quantity}.\n\n"
+
+        # FIX: Deteksi lofi → aktifkan semi-instrumental mode
+        # FIX: deteksi lofi HANYA dari style_input bukan description
+        _style_lower = (style_input or "").lower()
+        _is_lofi = any(kw in _style_lower for kw in ["lofi", "lo-fi", "lo fi", "chillhop", "chill hop", "study beats", "chill beats"])
+        _lofi_note = ""
+        _lofi_style_extra = ""
+        _song_structure = (
+            _genre_lstruct if _genre_lstruct
+            else (
+                "[Verse 1] → [Pre-Chorus](opt) → [Chorus] → [Verse 2] → [Pre-Chorus](opt)\n"
+                "→ [Chorus] → [Instrumental Break] → [Bridge] → [Final Chorus] → [Outro]\n"
+                "NEVER start with [Intro] or [Instrumental]. [Instrumental Break] AFTER 2nd Chorus ONLY."
+            )
+        )
+        if _is_lofi and not instrumental:
+            _lofi_note = (
+                "⚠️ SEMI-INSTRUMENTAL MODE (LOFI STUDY):\n"
+                "OUTPUT FORMAT: Write ONLY the raw lyrics/tags. NO explanations, NO comments, NO markdown, NO asterisks.\n"
+                "START directly with the first section tag. Example output format:\n"
+                "[Intro - instrumental]\n"
+                "[Verse]\n"
+                "Rain on the window, coffee going cold\n"
+                "Pages half-read, stories left untold\n"
+                "[Instrumental Break]\n"
+                "[Humming]\n"
+                "[Chorus]\n"
+                "Still here, still breathing\n"
+                "[Instrumental Break]\n"
+                "[Outro - instrumental]\n"
+                "--- END EXAMPLE ---\n"
+                "RULES:\n"
+                "- ONLY use square brackets [] for section tags. NEVER parentheses ().\n"
+                "- Vocal lines: [Verse] max 4 lines, [Chorus] max 2 lines. ALL other sections = [Instrumental] tags.\n"
+                "- Use 4-6 section tags total. Keep it SHORT and sparse — lofi is minimal.\n"
+                "- MAXIMUM 8 vocal lines total across ALL [Verse] and [Chorus] sections combined.\n"
+                "- RHYME SCHEME: Verse=ABAB(1&3 rhyme,2&4 rhyme),Chorus=AABB. NEVER write A/B labels in output!\n"
+                "  No orphan lines — every vocal line must have a rhyme partner.\n"
+                "  Near-rhyme OK (night/light, stay/away). Natural flow over forced rhyme.\n"
+                "- Do NOT explain, do NOT add notes, JUST write the lyrics/tags directly.\n\n"
+            )
+            _lofi_style_extra = ", minimal vocals, mostly instrumental, sparse lyrics, long instrumental breaks, soft humming, ambient, extended outro"
+            _song_structure = (
+                "[Intro - instrumental] → [Verse 1](2-4 lines only) → [Instrumental Break]\n"
+                "→ [Chorus](1-2 lines only) → [Instrumental Break] → [Verse 2](2-4 lines only)\n"
+                "→ [Instrumental Break] → [Chorus](1-2 lines) → [Outro - instrumental]\n"
+                "MOST sections MUST be [Instrumental] tags — NO extra lyric lines outside Verse/Chorus."
+            )
+
+        # ── MINI LYRICS MODE ⚡ ───────────────────────────────────────────
+        # Verse 1, Verse 2 + Outro dapat lirik; semua bagian lain instrumental
+        if _is_mini and not instrumental:
+            _lofi_note = (
+                "⚡ MINI LYRICS MODE:\n"
+                "ONLY these sections get real vocal lyrics:\n"
+                "  [Verse 1] — 4 lines MAX\n"
+                "  [Verse 2] — 4 lines MAX\n"
+                "  [Outro]   — 2 lines MAX (fade/close)\n"
+                "ALL other sections ([Chorus], [Bridge], [Pre-Chorus], [Intro], [Hook])\n"
+                "MUST use ONLY instrumental/music direction tags — NO vocal lines.\n"
+                "Example:\n"
+                "  [Chorus]\n"
+                "  [Instrumental - full band, building]\n"
+                "  [Bridge]\n"
+                "  [Instrumental Break]\n"
+                "Total vocal lines: MAX 10 lines across ALL sections combined.\n"
+                "- RHYME SCHEME (MANDATORY): Verse=ABAB, Chorus=AABB. CRITICAL: NEVER print A/B markers in lyrics!\n"
+                "  Outro = AA couplet (2 lines that rhyme, closing feel).\n"
+                "  Near-rhyme OK (night/light, stay/way). Natural over forced.\n"
+                "Do NOT write explanations. Output only lyrics/tags directly.\n\n"
+            )
+            _lofi_style_extra = ", minimal vocals, instrumental chorus, instrumental bridge, verse-focused"
+            _song_structure = (
+                "[Instrumental Intro] → [Verse 1](4 lines vocal) → [Chorus - instrumental]\n"
+                "→ [Verse 2](4 lines vocal) → [Chorus - instrumental]\n"
+                "→ [Instrumental Bridge] → [Chorus - instrumental]\n"
+                "→ [Outro](2 lines vocal, then fade)\n"
+                "RULE: Chorus, Bridge, Intro = NO vocal lines. Use [Instrumental ...] tags only."
+            )
+        # ─────────────────────────────────────────────────────────────────
+
+        # Susun bagian matrix tema (hanya jika pakai matrix_variables)
+        _matrix_section = ""
+        if _use_matrix and _mx_char:
+            _emotions_str = ", ".join(_genre_emotions) if _genre_emotions else ""
+            _matrix_section = (
+                f"VOCAL STYLE: {_genre_vocal}\n" if _genre_vocal else ""
+            ) + (
+                f"EMOTIONS: {_emotions_str}\n" if _emotions_str else ""
+            ) + (
+                "\nSONG THEME:\n"
+                f"Character: {_mx_char}\n"
+                f"Setting: {_mx_setting}\n"
+                f"Conflict: {_mx_conflict}\n"
+                f"Focus object (mention poetically): {_mx_object}\n\n"
+                "RULES:\n"
+                "1. Do NOT use clichés (neon lights, dancing in the rain, toxic, warrior, phoenix, ethereal).\n"
+                "2. Provide 2 unique song title ideas (max 3-4 words each, concrete and specific).\n"
+                "3. Do NOT repeat verse lines verbatim.\n"
+            )
+
+        _lang_note = (
+            f"LANGUAGE: Write ALL lyrics STRICTLY in {_language}.\n"
+            "Section tags stay in English ([Verse 1], [Chorus], etc).\n"
+            "Do NOT mix languages unless the description explicitly requests it.\n\n"
+        ) if _language else ""
+        # ══ Custom Prompt Mode (DeepSeek Web) ══════════════════════════════════
+        _active_p_ds = get_active_prompt()
+        if _active_p_ds and _active_p_ds.get("template", "").strip():
+            _ctpl_ds = _active_p_ds["template"]
+            _csys_ds = _active_p_ds.get("system", "").strip()
+            prompt = _safe_prompt_format(
+                _ctpl_ds,
+                description=description,
+                style=style_input or description,
+                index=i,
+                total=quantity,
+            )
+            if _csys_ds:
+                prompt = _csys_ds + "\n\n" + prompt
+            log_cb(f"[CUSTOM PROMPT] '{_active_p_ds.get('label','Custom')}' lagu {i}/{quantity}")
+        else:
+            # ── Default prompt bawaan ASuGen ─────────────────────────────────
+            prompt = (
+                f"You are a professional songwriter. Write song #{i} of {quantity}.\n\n"
             f"GENRE DIRECTIVE: {_genre_guide}\n\n"
+            f"SONG STRUCTURE: {_song_structure}\n\n"
             f"TOPIC / DESCRIPTION: {_topic}\n\n"
+            f"{_matrix_section}"
             f"{_instr_note}"
+            f"{_lang_note}"
+            f"{_lofi_note}"
+            "OUTPUT: Write ONLY the raw lyrics. NO explanations, NO comments, NO markdown, NO asterisks before section tags.\n"
+            "Start DIRECTLY with the first section tag like [Verse 1].\n"
             "REQUIREMENTS:\n"
-            f"- Style tags for Suno AI: {_detected_style or 'match the genre above'}\n"
+            f"- Style tags for Suno AI: {style_input or _detected_style or 'match the genre above'}{_lofi_style_extra}\n"
             "- Song structure: [Verse 1], [Chorus], [Verse 2], [Bridge], [Outro]\n"
-            f"- MINIMUM {MIN_LYRICS_CHARS} characters total (count carefully)\n"
+            f"- {('MINI MODE: verse+outro only. MAX 10 vocal lines total. NO chorus vocals.' if _is_mini else 'LOFI: keep lyrics SHORT and sparse. MAX 8 vocal lines total.' if _is_lofi else f'MINIMUM {MIN_LYRICS_CHARS} characters of raw lyrics+tags (count carefully)')}\n"
             "- Make this song UNIQUE and DIFFERENT from others in this session\n"
             "- BANNED words: neon, shimmer, ethereal, celestial, warrior, phoenix, endless, echo\n"
+            "- RHYME SCHEME (MANDATORY — makes the song sound natural and musical when sung):\n"
+            "  ▸ VERSE: ABAB (lines 1&3 rhyme=A, lines 2&4 rhyme=B). DO NOT write A or B at end of lines!\n"
+            "    Example ABAB:\n"
+            "      The rain taps slow on the glass tonight\n"
+            "      City lights blur soft and fade away\n"
+            "      My hoodie warm and the room just right\n"
+            "      Nothing left to do but stay\n"
+            
+            "    ⚠ NEVER write A, B, (A), (B) at end of lyric lines — rhyme silently!\\n"
+"  ▸ CHORUS: use AABB pattern — lines 1&2 rhyme, lines 3&4 rhyme\n"
+            "    Example AABB:\n"
+            "      Just breathe, just stay\n"
+            "      Let the moment play\n"
+            "      Close your eyes now\n"
+            "      Feel the slow glow\n"
+            "  ▸ BRIDGE: ABAB or AABB (must be consistent, not random)\n"
+            "  ▸ OUTRO: AA couplet or single AB pair (short, closing feel)\n"
+            "  RULES:\n"
+            "    — End words of rhyming lines MUST share the same vowel/consonant sound\n"
+            "    — Never leave a vocal line without a rhyme partner (no orphan lines)\n"
+            "    — Near-rhyme is acceptable (night/light, way/stay, soul/whole)\n"
+            "    — Keep rhyme natural — do NOT force awkward word order just to rhyme\n"
+            "- STRICTLY FORBIDDEN: Do NOT use parentheses () ANYWHERE in lyrics or section labels.\n"
+            "  Use ONLY square brackets [] for ALL section tags and instrumental directions.\n"
+            "  WRONG: (verse 1), (bridge), (Soft guitar), (instrumental)\n"
+            "  CORRECT: [Verse 1], [Bridge], [Soft guitar], [Instrumental]\n"
+            "- NEVER use parentheses () in lyrics — Suno reads them as vocals.\n"
+            "- ALL section tags MUST use ONLY square brackets []. Example: [Instrumental], [Humming]\n"
+            "- ALL instrumental/music directions MUST be written as their OWN line in square brackets.\n"
+            "  Write direction as SEPARATE bracketed line after the section tag.\n"
+            "  CORRECT: [Instrumental Break]\n[Slide guitar, sparse, slow]\n[Humming]\n"
+            "  CORRECT: [Outro]\n[Guitar fading, footsteps in gravel]\n[Silence]\n"
+            "  WRONG: [Instrumental Break]\nSlide guitar, sparse, humming  ← NO bare text\n"
+            "  WRONG: [Instrumental (soft piano)]  ← NO desc inside brackets\n"
+            "  RULE: Any music direction = wrap it in [] on its own line. NEVER leave it as bare text.\n"
             "- BOTH titles: SHORT, CONCRETE, SPECIFIC (2-4 words). NO abstract nouns.\n"
             "  ✅ GOOD: 'Cold Coffee Study', 'Rain on Pavement', 'Last Page of June'\n"
             "  ❌ BAD: 'Eternal Journey', 'Soul Rising', 'Infinite Love'\n\n"
             "SONG STRUCTURE — MANDATORY ORDER:\n"
-            "[Verse 1] → [Pre-Chorus](opt) → [Chorus] → [Verse 2] → [Pre-Chorus](opt)\n"
-            "→ [Chorus] → [Instrumental Break] → [Bridge] → [Final Chorus] → [Outro]\n"
-            "NEVER start with [Intro] or [Instrumental]. [Instrumental Break] AFTER 2nd Chorus ONLY.\n\n"
+            f"{_song_structure}\n\n"
             "=== OUTPUT FORMAT (STRICTLY FOLLOW) ===\n"
             "Line 1: TITLE_A: [first concrete title]\n"
             "Line 2: TITLE_B: [second DIFFERENT concrete title]\n"
-            "Line 3: STYLE: [suno style tags]\n"
+            "Line 3: STYLE: [COPY the exact user style input — do NOT change, translate, or summarize it]\n"
             "Line 4: LYRICS:\n"
             "Then: full lyrics with section headers\n"
             "NOTHING before TITLE_A, NOTHING after last lyric line.\n\n"
@@ -471,43 +932,124 @@ async def _deepseek_web_prepare_songs(context, config, log_cb, timeout_sec=120):
             f"STYLE: {detected}\n"
             "LYRICS:\n"
             "[Verse 1]\n"
-            "(verse 1 — fresh, specific imagery)\n"
+            "<verse 1 line 1>\n"
             "[Chorus]\n"
-            "(chorus)\n"
+            "<chorus line 1>\n"
             "[Verse 2]\n"
-            "(verse 2 — advance the story)\n"
+            "<verse 2 line 1>\n"
             "[Chorus]\n"
-            "(chorus repeat/variation)\n"
+            "<chorus repeat or variation>\n"
             "[Instrumental Break]\n"
+            "[<music direction, e.g.: Fingerpicked guitar, slow and sparse>]\n"
             "[Bridge]\n"
-            "(bridge)\n"
+            "<bridge line 1>\n"
             "[Final Chorus]\n"
-            "(final chorus)\n"
+            "<final chorus lines>\n"
             "[Outro]\n"
-            "(outro)\n"
-        )
+            "[<music direction, e.g.: Guitar fading, slow footsteps>]\n"
+            "[<e.g.: Humming>]\n"
+            "[<e.g.: Silence>]\n"
+            )
+        # ═══════════════════════════════════════════════════════════════════
         raw = await _deepseek_web_generate_lyrics(context, prompt, log_cb, timeout_sec)
         if not raw:
             log_cb(f"[DS-WEB] Lagu {i}: respons kosong - skip.")
             continue
-        p = _parse_deepseek_response(raw)
+        # ── Smart parse: JSON (custom prompt) atau text (default) ──────────
+        _raw_stripped = raw.strip()
+        # Bersihkan markdown code block jika ada
+        import re as _re
+        _raw_clean = _re.sub(r"```(?:json)?", "", _raw_stripped, flags=_re.MULTILINE).strip()
+        _raw_clean = _re.sub(r"```", "", _raw_clean).strip()
+        # Coba parse JSON dulu (format output custom prompt)
+        p = None
+        # ── Parser 1: Format PLAIN TEXT (TITLE_A / TITLE_B / LYRICS) ──────────
+        import re as _re_js
+        _ta_pt = _re_js.search(r'TITLE_A:\s*(.+)', _raw_clean, _re_js.IGNORECASE)
+        _tb_pt = _re_js.search(r'TITLE_B:\s*(.+)', _raw_clean, _re_js.IGNORECASE)
+        _ly_pt = _re_js.search(r'LYRICS:\s*(.+)', _raw_clean, _re_js.IGNORECASE | _re_js.DOTALL)
+        _PLACEHOLDER_SET = {"first creative title", "second creative title", "first title", "second title"}
+        if _ta_pt and _ly_pt:
+            _ta_v = re.sub(r'["\']+$', '', re.sub(r'^["\']+', '', _ta_pt.group(1).strip()))
+            _tb_v = (re.sub(r'["\']+$', '', re.sub(r'^["\']+', '', _tb_pt.group(1).strip())) if _tb_pt else "")
+            _ly_v = _ly_pt.group(1).strip()
+            if _ta_v.lower() not in _PLACEHOLDER_SET and _ly_v:
+                p = {
+                    "title":   _ta_v, "title_a": _ta_v,
+                    "title_b": _tb_v if _tb_v.lower() not in _PLACEHOLDER_SET else "",
+                    "style":   "", "lyrics": _ly_v,
+                }
+                log_cb(f"[DS-WEB] Plain text parsed OK: '{_ta_v}' / '{_tb_v}'")
+        # ── Parser 2: Format JSON (fallback) ──────────────────────────────────
+        if p is None:
+            _json_candidates = _re_js.findall(r'\{[^{}]*"title_a"[^{}]*\}', _raw_clean, _re_js.DOTALL)
+            _PH = {"first title", "second title", "song", "unique title version a", "first creative title"}
+            for _jraw in reversed(_json_candidates):
+                try:
+                    _jdata = json.loads(_jraw)
+                    _ta_c = str(_jdata.get("title_a") or "").strip().lower()
+                    _ly_c = str(_jdata.get("lyrics") or "").strip()
+                    if _ta_c in _PH or not _ly_c:
+                        continue
+                    p = {
+                        "title":   str(_jdata.get("title_a") or f"Song {i}A"),
+                        "title_a": str(_jdata.get("title_a") or f"Song {i}A"),
+                        "title_b": str(_jdata.get("title_b") or ""),
+                        "style":   str(_jdata.get("style") or ""),
+                        "lyrics":  str(_jdata.get("lyrics") or ""),
+                    }
+                    log_cb(f"[DS-WEB] JSON parsed OK: '{p['title_a']}'")
+                    break
+                except Exception:
+                    continue
+        if p is None:
+            try:
+                _jdata = json.loads(_raw_clean)
+                _ta_c = str(_jdata.get("title_a") or "").strip().lower()
+                _ly_c = str(_jdata.get("lyrics") or "").strip()
+                if _ta_c and _ly_c:
+                    p = {
+                        "title":   str(_jdata.get("title_a") or f"Song {i}A"),
+                        "title_a": str(_jdata.get("title_a") or f"Song {i}A"),
+                        "title_b": str(_jdata.get("title_b") or ""),
+                        "style":   str(_jdata.get("style") or ""),
+                        "lyrics":  _ly_c,
+                    }
+                    log_cb(f"[DS-WEB] JSON full parse OK")
+            except Exception as _je:
+                log_cb(f"[DS-WEB] JSON parse failed: {_je}")
+                p = None
+        # ── Parser 3: text parser generic ─────────────────────────────────────
+        if p is None:
+            p = _parse_deepseek_response(raw)
+        # Sanitize: kurung () → braket [] agar tidak dibaca Suno sebagai vokal
+        if p.get("lyrics"):
+            p["lyrics"] = _sanitize_lyrics(p["lyrics"])
         title_a = p.get("title_a") or p.get("title") or f"Song {i}A"
         title_b = p.get("title_b") or ""
         if not title_b:
             _w = title_a.split()
-            title_b = (" ".join(_w[1:] + [_w[0]]) if len(_w) >= 2 else title_a + " II")
+            title_b = _generate_title_b(title_a, i)
         # Style = PERSIS input user, BUKAN dari DeepSeek response
-        # Style: pakai style_input dari user, fallback ke description
-        style  = (style_input or description).strip().rstrip(".,").strip()
+        style  = description.strip().rstrip(".,").strip()
         lyrics = "" if instrumental else p.get("lyrics", "")
-        if not instrumental and len(lyrics) < MIN_LYRICS_CHARS:
-            log_cb(f"[DS-WEB] Lagu {i}: lirik {len(lyrics)} char < {MIN_LYRICS_CHARS} — terlalu pendek, tetap dipakai.")
+        # FIX: cek lofi HANYA dari style (bukan description)
+        _sl_w = style.lower() if style else ""
+        _is_lofi_w = any(kw in _sl_w for kw in [
+            "lofi","lo-fi","lo fi","chillhop","study beats",
+            "campursari","campur sari","langgam jawa","langgam","gamelan","sinden","karawitan"
+        ])
+        _is_custom_now = bool(get_active_prompt())
+        _min_w = 0 if _is_mini else (100 if _is_custom_now else (200 if _is_lofi_w else MIN_LYRICS_CHARS))
+        if not instrumental and _min_w > 0 and len(lyrics) < _min_w:
+            log_cb(f"[DS-WEB] Lagu {i}: lirik {len(lyrics)} char < {_min_w} — terlalu pendek, tetap dipakai.")
         log_cb(f"[DS-WEB] OK '{title_a}' / '{title_b}' | {len(lyrics)} char | style: {style[:60]}")
         songs.append({
             "title": title_a, "title_a": title_a, "title_b": title_b,
             "style": style, "lyrics": lyrics,
             "instrumental": instrumental,
             "profile_name": config.get("profile_name", ""),
+            "lyric_source": _lyric_source,  # FIX v5.40.1: mini skip check needs this
         })
         if i < quantity:
             await asyncio.sleep(3)
@@ -650,10 +1192,49 @@ def _clean_style_tags(raw: str, fallback: str) -> str:
 
 
 def generate_song_ai(description: str, style: str, song_index: int,
-                     total: int, cfg: dict, instrumental: bool = False) -> dict:
-    lang = detect_language(description)
-    lang_instr = ("Write the title and lyrics in Indonesian (Bahasa Indonesia)."
-                  if lang == "id" else "Write the title and lyrics in English.")
+                     total: int, cfg: dict, instrumental: bool = False,
+                     language: str = "") -> dict:
+    # ══ Custom Prompt Mode ════════════════════════════════════════════════════
+    _active_p = get_active_prompt()
+    if _active_p and _active_p.get("template", "").strip():
+        import sys as _sys
+        print(f"[CUSTOM PROMPT] Menggunakan: '{_active_p.get('label','Custom')}' untuk lagu {song_index}/{total}", flush=True)
+        _csys  = _active_p.get("system", "").strip()
+        _ctpl  = _active_p["template"]
+        _cuser = _safe_prompt_format(
+            _ctpl,
+            description=description,
+            style=style,
+            index=song_index,
+            total=total,
+        )
+        _msgs = []
+        if _csys:
+            _msgs.append({"role": "system", "content": _csys})
+        _msgs.append({"role": "user", "content": _cuser})
+        _raw = call_ai(_msgs, cfg, max_tokens=1800, temperature=0.95)
+        # Bersihkan markdown code block
+        _raw = re.sub(r"```(?:json)?", "", _raw, flags=re.MULTILINE).strip()
+        _raw = re.sub(r"```", "", _raw).strip()
+        try:
+            _pc  = json.loads(_raw)
+            _ta  = str(_pc.get("title_a", _pc.get("title", f"Song {song_index}A"))).strip()
+            _tb  = str(_pc.get("title_b", f"Song {song_index}B")).strip()
+            _ly  = str(_pc.get("lyrics", "")).strip()
+        except Exception:
+            _ls  = [l for l in _raw.splitlines() if l.strip()]
+            _ta  = _ls[0][:60] if _ls else f"Song {song_index}"
+            _tb  = _ta + " II"
+            _ly  = "\n".join(_ls[1:]) if len(_ls) > 1 else _raw
+        _ly = sanitize_lyrics(_ly) if _ly else _ly
+        return {"title": _ta, "title_a": _ta, "title_b": _tb, "lyrics": _ly}
+    # ════════════════════════════════════════════════════════════════════════
+    if language:
+        lang_instr = f"Write the title and ALL lyrics STRICTLY in {language}. Section tags stay in English."
+    else:
+        lang = detect_language(description)
+        lang_instr = ("Write the title and lyrics in Indonesian (Bahasa Indonesia)."
+                      if lang == "id" else "Write the title and lyrics in English.")
     if instrumental:
         lyrics_instr = (
             "THIS IS AN INSTRUMENTAL TRACK — no sung lyrics at all. "
@@ -784,9 +1365,16 @@ def generate_song_ai(description: str, style: str, song_index: int,
         raise ValueError(f"Model returned placeholder (title_a={title_a!r})")
     if not lyrics and not instrumental:
         raise ValueError(f"Model returned empty lyrics (title_a={title_a!r})")
-    if not instrumental and len(lyrics) < MIN_LYRICS_CHARS:
+    # FIX: lofi/semi-instrumental boleh lirik pendek (min 400 char)
+    # FIX: cek lofi HANYA dari style bukan description
+    _sl_check = style.lower() if style else ""
+    _is_lofi_check = any(kw in _sl_check for kw in [
+        "lofi", "lo-fi", "lo fi", "chillhop", "chill hop", "study beats", "chill beats"
+    ])
+    _min_chars = 200 if _is_lofi_check else MIN_LYRICS_CHARS
+    if not instrumental and len(lyrics) < _min_chars:
         raise ValueError(
-            f"Lirik terlalu pendek: {len(lyrics)} karakter (minimum {MIN_LYRICS_CHARS}). "
+            f"Lirik terlalu pendek: {len(lyrics)} karakter (minimum {_min_chars}). "
             f"Retry untuk mendapatkan lirik lebih lengkap."
         )
     def _fix_t(t, sfx):
@@ -796,6 +1384,8 @@ def generate_song_ai(description: str, style: str, song_index: int,
         return t
     title_a = _fix_t(title_a, "A")
     title_b = _fix_t(title_b, "B")
+    # Sanitize kurung () → braket [] sebelum dikirim ke Suno
+    lyrics = _sanitize_lyrics(lyrics) if lyrics else lyrics
     return {"title_a": title_a, "title_b": title_b, "lyrics": lyrics}
 
 
@@ -807,6 +1397,7 @@ def prepare_songs_with_ai(config: dict, log_cb) -> list:
     description  = config["description"]
     quantity     = config.get("quantity", 1)
     instrumental = config.get("instrumental", False)
+    _lang_cfg    = (config.get("language", "") or "").strip()
     ai_cfg = load_ai_config()
     use_ai = bool(ai_cfg.get("api_key", "").strip())
 
@@ -854,7 +1445,7 @@ def prepare_songs_with_ai(config: dict, log_cb) -> list:
                         log_cb(f"[AI] [{attempt}/{total_combos}] {model} | {kl}")
                         try:
                             _ai_result = _prepare_ai(description, quantity, instrumental,
-                                                     cfg_try, log_cb)
+                                                     cfg_try, log_cb, language=_lang_cfg)
                             log_cb(f"[AI] ✓ Berhasil: {model} | {kl}")
                             success = True
                             break
@@ -887,7 +1478,7 @@ def prepare_songs_with_ai(config: dict, log_cb) -> list:
                     cfg_retry["model"]   = models_to_try[0]
                     cfg_retry["api_key"] = api_keys[0]
                     log_cb(f"[AI] Final retry: {models_to_try[0]} | key#1")
-                    _ai_result = _prepare_ai(description, quantity, instrumental, cfg_retry, log_cb)
+                    _ai_result = _prepare_ai(description, quantity, instrumental, cfg_retry, log_cb, language=_lang_cfg)
                     log_cb("[AI] ✓ Berhasil di final retry!")
                     return _ai_result
                 except Exception:
@@ -896,7 +1487,7 @@ def prepare_songs_with_ai(config: dict, log_cb) -> list:
         else:
             log_cb(f"[AI] Model: {ai_cfg['model']} | {ai_cfg['base_url']}")
             try:
-                return _prepare_ai(description, quantity, instrumental, ai_cfg, log_cb)
+                return _prepare_ai(description, quantity, instrumental, ai_cfg, log_cb, language=_lang_cfg)
             except urllib.error.HTTPError as e:
                 body = e.read().decode("utf-8", errors="replace")[:300]
                 log_cb(f"[AI] HTTP Error {e.code}: {body}")
@@ -909,7 +1500,8 @@ def prepare_songs_with_ai(config: dict, log_cb) -> list:
     return _prepare_fallback(description, quantity, instrumental, log_cb)
 
 
-def _prepare_ai(description, quantity, instrumental, ai_cfg, log_cb) -> list:
+def _prepare_ai(description, quantity, instrumental, ai_cfg, log_cb,
+                language: str = "") -> list:
     # Style = PERSIS input user, tidak dimodifikasi AI sama sekali
     style = description.strip().rstrip(".,").strip()
     log_cb(f"  Style BAKU (dari input user, tidak diubah AI): {style}")
@@ -924,12 +1516,14 @@ def _prepare_ai(description, quantity, instrumental, ai_cfg, log_cb) -> list:
             break
         log_cb(f"[AI] Generating song {i}/{quantity}...")
         try:
-            result = generate_song_ai(description, style, i, quantity, ai_cfg, instrumental)
+            result = generate_song_ai(description, style, i, quantity, ai_cfg, instrumental, language=language)
+            # FIX: handle title_a/title_b (custom prompt) dan title (default)
+            _title = result.get("title") or result.get("title_a") or f"Song {i}"
             songs.append({
-                "title": result["title"], "style": style,
+                "title": _title, "style": style,
                 "lyrics": result["lyrics"], "instrumental": instrumental,
             })
-            log_cb(f"  Lagu {i}: '{result['title']}' | {len(result['lyrics'].splitlines())} baris")
+            log_cb(f"  Lagu {i}: '{_title}' | {len(result['lyrics'].splitlines())} baris")
         except Exception as e:
             # Fallback PER-LAGU: tetap pakai style yang sudah digenerate, BUKAN deteksi ulang
             log_cb(f"  [AI] Error lagu {i}: {e}")
@@ -1242,4 +1836,7 @@ prepare_ai = _prepare_ai
 fallback_detect_genre = _fallback_detect_genre
 prepare_fallback = _prepare_fallback
 get_profile_abs = _get_profile_abs
-save_profiles_raw = _save_profiles_raw
+save_profiles_raw    = _save_profiles_raw
+load_prompt_config   = load_prompt_config
+save_prompt_config   = save_prompt_config
+get_active_prompt    = get_active_prompt

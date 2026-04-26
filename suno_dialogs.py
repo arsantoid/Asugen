@@ -9,8 +9,329 @@ from suno_core import (
     _deepseek_web_prepare_songs, _minimize_chrome_windows, _prompt_to_folder_name,
     _run_async, _stop_requested, _parse_deepseek_response,
     get_stop_event, request_stop, clear_stop, is_stop_requested, is_paused, wait_if_paused, request_pause, resume_generate,
-    save_window_position, load_window_position
+    save_window_position, load_window_position,
+    load_prompt_config, save_prompt_config, get_active_prompt,
 )
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PromptManagerDialog — kelola banyak custom prompt, tinggal load & pilih
+# ══════════════════════════════════════════════════════════════════════════════
+class PromptManagerDialog(tk.Toplevel):
+    """
+    Dialog manajemen multi custom prompt.
+    - Bisa tambah / hapus / rename prompt
+    - Edit system + user template tiap prompt
+    - Pilih prompt aktif
+    - Toggle mode: Default vs Custom
+    """
+    EXAMPLE_TEMPLATE = 'You are a professional Smooth R&B and Chill Lofi songwriter.\nYour task is to write complete song lyrics for song {index} of {total}.\n\n━━━━━━━━━━━ EDIT BAGIAN INI SESUAI KEBUTUHAN ━━━━━━━━━━━\n\nGENRE & STYLE: Smooth R&B, Chill Lofi, late-night vibes\nMOOD: Relaxing, cozy, soulful, peaceful\n\nLANGUAGE RULES:\n- Use simple, direct English easy to understand for ages 15-50\n- Be literal but soulful, use R&B/Lofi vernacular naturally\n- e.g. "smooth flow", "late night", "chill", "vibe", "unwind"\n\nTONE: Influenced by smooth 90s/00s R&B, modern Lofi hip-hop, chillhop\nPERFECT FOR: studying, midnight relaxation, late drives, rainy nights\n\nDESCRIPTION / TOPIC: {description}\nMUSIC STYLE TAGS: {style}\n\nNEGATIVE KEYWORDS (DO NOT include these in lyrics):\nThemes  : violence, drugs, explicit content, dark depression, anger, hate\nWords   : scream, shout, fight, kill, die, curse words, explicit slang\nStyle   : fast rap, hard rock energy, aggressive tone, distorted vocals\nStructure: no talking sections, no spoken word, no rap freestyle breaks\n\n━━━━━━━━━━━ JANGAN UBAH BAGIAN INI ━━━━━━━━━━━━━━━━━\n\nSONG STRUCTURE (mandatory):\n[Instrumental Intro]\n[Verse 1]\n[Chorus]\n[Verse 2]\n[Chorus]\n[Instrumental Bridge]\n[Chorus]\n[Outro]\n\nAVAILABLE SUNO SECTION KEYWORDS (always use in square brackets [ ]):\nStructure : [Intro] [Verse 1] [Verse 2] [Pre-Chorus] [Chorus] [Post-Chorus] [Bridge] [Hook] [Outro]\nInstrument: [Instrumental Intro] [Instrumental Bridge] [Beat Drop] [Guitar Solo] [Piano Solo] [Sax Solo]\nVocal     : [Ad-libs] [Vocal Harmony] [Whisper] [Vocal Fade]\nAmbiance  : [Fade In] [Fade Out] [Build Up] [Breakdown] [Vinyl Crackle] [Rain Ambience]\n\nRHYME SCHEME (mandatory):\n- [Verse]: ABAB — lines 1&3 rhyme (A), lines 2&4 rhyme (B)\n- [Chorus]: AABB — lines 1&2 rhyme (A), lines 3&4 rhyme (B)\n- [Bridge]: ABAB or AABB (be consistent)\n- [Outro]: AA couplet — final 2 lines must rhyme\n- Near-rhyme OK: night/light, stay/away, soul/whole\n- NO orphan lines — every vocal line must have a rhyme pair\n\nRULES:\n- ALWAYS provide TWO different creative song titles (title_b MUST NOT be empty)\n- ALWAYS provide TWO different song titles (title_a and title_b MUST be different)\n- Write UNIQUE lyrics different from any other song in this session\n- MAXIMUM 2000 characters of lyrics. Keep it concise but complete\n- Use square brackets [] for ALL section tags and music directions\n- NEVER use parentheses () anywhere in lyrics\n- Music directions on their OWN line: [Soft Rhodes piano, vinyl crackle]\n\nOutput format (plain text, no JSON, no markdown, no explanation):\nTITLE_A: First Creative Title\nTITLE_B: Second Creative Title\nLYRICS:\n[Verse 1]\nline1\nline2\n[Chorus]\nchorus line'
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.title("✍ Prompt Manager — ASuGen")
+        self.geometry("820x620")
+        self.resizable(True, True)
+        self.grab_set()
+        self.minsize(700, 500)
+
+        self._cfg = load_prompt_config()
+        self._dirty = False  # ada perubahan yang belum disimpan
+
+        self._build_ui()
+        self._refresh_list()
+        self._load_active_into_editor()
+
+    # ── UI ─────────────────────────────────────────────────────────────────
+    def _build_ui(self):
+        # Top bar: mode toggle
+        topbar = ttk.Frame(self, padding=(12, 8, 12, 4))
+        topbar.pack(fill="x")
+
+        ttk.Label(topbar, text="Mode Prompt:", font=("", 9, "bold")).pack(side="left")
+        self._mode_var = tk.StringVar(value=self._cfg.get("mode", "default"))
+        ttk.Radiobutton(topbar, text="🔵 Default (bawaan ASuGen)",
+                        variable=self._mode_var, value="default",
+                        command=self._on_mode_change).pack(side="left", padx=(8,0))
+        ttk.Radiobutton(topbar, text="🟠 Custom (prompt pilihan)",
+                        variable=self._mode_var, value="custom",
+                        command=self._on_mode_change).pack(side="left", padx=(8,0))
+
+        # Status label
+        self._status_var = tk.StringVar(value="")
+        ttk.Label(topbar, textvariable=self._status_var,
+                  foreground="#2a7a2a", font=("", 8)).pack(side="right")
+
+        ttk.Separator(self, orient="horizontal").pack(fill="x")
+
+        # Main: 2 panel (list kiri | editor kanan)
+        main = ttk.PanedWindow(self, orient="horizontal")
+        main.pack(fill="both", expand=True, padx=0, pady=0)
+
+        # ── Panel Kiri: daftar prompt ──────────────────────────────────────
+        left = ttk.Frame(main, width=210)
+        left.pack_propagate(False)
+        main.add(left, weight=1)
+
+        ttk.Label(left, text="Daftar Prompt:", font=("", 9, "bold")).pack(
+            anchor="w", padx=10, pady=(10,4))
+
+        self._listbox = tk.Listbox(left, selectmode="single",
+                                   activestyle="dotbox",
+                                   font=("", 9), relief="flat",
+                                   highlightthickness=1,
+                                   exportselection=False)
+        sb = ttk.Scrollbar(left, orient="vertical",
+                            command=self._listbox.yview)
+        self._listbox.configure(yscrollcommand=sb.set)
+        self._listbox.pack(side="left", fill="both", expand=True, padx=(10,0), pady=(0,4))
+        sb.pack(side="left", fill="y", pady=(0,4), padx=(0,4))
+        self._listbox.bind("<<ListboxSelect>>", self._on_select)
+
+        # Tombol list actions
+        lbtn = ttk.Frame(left)
+        lbtn.pack(fill="x", padx=10, pady=(0,8))
+        ttk.Button(lbtn, text="➕ Tambah",  command=self._add_prompt,    width=9).pack(side="left")
+        ttk.Button(lbtn, text="🗑 Hapus",   command=self._delete_prompt, width=9).pack(side="left", padx=4)
+        ttk.Button(lbtn, text="⬆", command=lambda: self._move_prompt(-1), width=3).pack(side="left")
+        ttk.Button(lbtn, text="⬇", command=lambda: self._move_prompt(1),  width=3).pack(side="left", padx=2)
+
+        # ── Panel Kanan: editor ────────────────────────────────────────────
+        right = ttk.Frame(main)
+        main.add(right, weight=3)
+
+        epad = ttk.Frame(right, padding=(12, 10, 12, 10))
+        epad.pack(fill="both", expand=True)
+
+        # Label / nama
+        row0 = ttk.Frame(epad)
+        row0.pack(fill="x", pady=(0,8))
+        ttk.Label(row0, text="Nama Prompt:", font=("", 9, "bold")).pack(side="left")
+        self._label_var = tk.StringVar()
+        self._label_entry = ttk.Entry(row0, textvariable=self._label_var, width=30)
+        self._label_entry.pack(side="left", padx=(8,0))
+        self._label_var.trace_add("write", lambda *_: self._mark_dirty())
+
+        # Set sebagai aktif
+        self._set_active_btn = ttk.Button(row0, text="▶ Aktifkan & Simpan",
+                                           command=self._set_active)
+        self._set_active_btn.pack(side="right")
+
+        # System prompt
+        ttk.Label(epad, text="System Prompt (opsional):",
+                  font=("", 9, "bold")).pack(anchor="w")
+        sys_frame = ttk.Frame(epad)
+        sys_frame.pack(fill="x", pady=(4,8))
+        self._sys_text = tk.Text(sys_frame, height=4, wrap="word",
+                                 font=("Consolas", 9), relief="solid", bd=1)
+        sys_sb = ttk.Scrollbar(sys_frame, orient="vertical",
+                                command=self._sys_text.yview)
+        self._sys_text.configure(yscrollcommand=sys_sb.set)
+        self._sys_text.pack(side="left", fill="both", expand=True)
+        sys_sb.pack(side="left", fill="y")
+        self._sys_text.bind("<KeyRelease>", lambda *_: self._mark_dirty())
+
+        # User template
+        lbl_tpl = ttk.Frame(epad)
+        lbl_tpl.pack(fill="x", pady=(0,4))
+        ttk.Label(lbl_tpl, text="User Prompt Template:",
+                  font=("", 9, "bold")).pack(side="left")
+        ttk.Button(lbl_tpl, text="📋 Isi Contoh",
+                   command=self._fill_example).pack(side="right")
+
+        tpl_frame = ttk.Frame(epad)
+        tpl_frame.pack(fill="both", expand=True, pady=(0,6))
+        self._tpl_text = tk.Text(tpl_frame, wrap="word",
+                                 font=("Consolas", 9), relief="solid", bd=1)
+        tpl_sb = ttk.Scrollbar(tpl_frame, orient="vertical",
+                                command=self._tpl_text.yview)
+        self._tpl_text.configure(yscrollcommand=tpl_sb.set)
+        self._tpl_text.pack(side="left", fill="both", expand=True)
+        tpl_sb.pack(side="left", fill="y")
+        self._tpl_text.bind("<KeyRelease>", lambda *_: self._mark_dirty())
+
+        # Hint variabel
+        hint1 = "✏ EDIT BEBAS: genre, mood, language rules, NEGATIVE KEYWORDS. JANGAN ubah bagian bawah garis ━━━"
+        hint2 = "Variabel: {description} {style} {index} {total}  |  Output WAJIB JSON: {\"title_a\":\"...\", \"title_b\":\"...\", \"lyrics\":\"...\"}"
+        ttk.Label(epad, text=hint1, foreground="#c07000",
+                  font=("", 8, "bold"), justify="left").pack(anchor="w")
+        ttk.Label(epad, text=hint2, foreground="#888",
+                  font=("", 8), justify="left").pack(anchor="w")
+
+        # Bottom: Save / Cancel
+        bot = ttk.Frame(self, padding=(12, 6))
+        bot.pack(fill="x", side="bottom")
+        ttk.Button(bot, text="💾 Simpan Semua", command=self._save_all).pack(side="left", padx=(0,6))
+        ttk.Button(bot, text="Tutup", command=self._on_close).pack(side="left")
+
+        # Update state widget sesuai mode awal
+        self._on_mode_change()
+
+    # ── List management ─────────────────────────────────────────────────────
+    def _refresh_list(self, select_idx=None):
+        prompts = self._cfg.get("prompts", [])
+        active  = int(self._cfg.get("active_index", 0))
+        self._listbox.delete(0, "end")
+        for i, p in enumerate(prompts):
+            label = p.get("label", f"Prompt {i+1}")
+            prefix = "▶ " if (i == active and self._cfg.get("mode") == "custom") else "   "
+            self._listbox.insert("end", f"{prefix}{label}")
+        idx = select_idx if select_idx is not None else min(active, max(0, len(prompts)-1))
+        if prompts:
+            self._listbox.selection_set(idx)
+            self._listbox.see(idx)
+
+    def _current_idx(self):
+        sel = self._listbox.curselection()
+        return sel[0] if sel else 0
+
+    def _on_select(self, event=None):
+        if self._dirty:
+            self._auto_save_current()
+        self._load_active_into_editor()
+
+    def _load_active_into_editor(self):
+        prompts = self._cfg.get("prompts", [])
+        if not prompts:
+            return
+        idx = self._current_idx()
+        idx = max(0, min(idx, len(prompts)-1))
+        p   = prompts[idx]
+
+        self._label_var.set(p.get("label", f"Prompt {idx+1}"))
+
+        self._sys_text.config(state="normal")
+        self._sys_text.delete("1.0", "end")
+        self._sys_text.insert("1.0", p.get("system", ""))
+
+        self._tpl_text.config(state="normal")
+        self._tpl_text.delete("1.0", "end")
+        self._tpl_text.insert("1.0", p.get("template", ""))
+
+        self._dirty = False
+
+        # Disable editor jika mode default
+        state = "normal" if self._mode_var.get() == "custom" else "disabled"
+        self._sys_text.config(state=state)
+        self._tpl_text.config(state=state)
+        self._label_entry.config(state=state)
+
+    def _auto_save_current(self):
+        """Simpan editor ke cfg saat ganti pilihan list (tanpa write file)."""
+        prompts = self._cfg.get("prompts", [])
+        if not prompts:
+            return
+        idx = self._current_idx()
+        idx = max(0, min(idx, len(prompts)-1))
+        prompts[idx] = {
+            "label":    self._label_var.get().strip() or f"Prompt {idx+1}",
+            "system":   self._sys_text.get("1.0", "end").strip(),
+            "template": self._tpl_text.get("1.0", "end").strip(),
+        }
+        self._cfg["prompts"] = prompts
+        self._dirty = False
+
+    def _mark_dirty(self):
+        self._dirty = True
+
+    def _add_prompt(self):
+        if self._dirty:
+            self._auto_save_current()
+        prompts = self._cfg.get("prompts", [])
+        n = len(prompts) + 1
+        prompts.append({"label": f"Custom Prompt {n}", "system": "", "template": ""})
+        self._cfg["prompts"] = prompts
+        self._refresh_list(select_idx=len(prompts)-1)
+        self._load_active_into_editor()
+
+    def _delete_prompt(self):
+        prompts = self._cfg.get("prompts", [])
+        if len(prompts) <= 1:
+            messagebox.showwarning("Hapus", "Minimal harus ada 1 prompt.", parent=self)
+            return
+        idx = self._current_idx()
+        del prompts[idx]
+        self._cfg["prompts"] = prompts
+        active = int(self._cfg.get("active_index", 0))
+        if active >= len(prompts):
+            self._cfg["active_index"] = len(prompts) - 1
+        new_idx = min(idx, len(prompts)-1)
+        self._refresh_list(select_idx=new_idx)
+        self._load_active_into_editor()
+
+    def _move_prompt(self, direction):
+        if self._dirty:
+            self._auto_save_current()
+        prompts = self._cfg.get("prompts", [])
+        idx     = self._current_idx()
+        new_idx = idx + direction
+        if new_idx < 0 or new_idx >= len(prompts):
+            return
+        prompts[idx], prompts[new_idx] = prompts[new_idx], prompts[idx]
+        # Update active_index jika diperlukan
+        active = int(self._cfg.get("active_index", 0))
+        if active == idx:
+            self._cfg["active_index"] = new_idx
+        elif active == new_idx:
+            self._cfg["active_index"] = idx
+        self._cfg["prompts"] = prompts
+        self._refresh_list(select_idx=new_idx)
+        self._load_active_into_editor()
+
+    def _set_active(self):
+        # Simpan editor dulu sebelum set aktif
+        self._auto_save_current()
+        idx = self._current_idx()
+        self._cfg["active_index"] = idx
+        self._cfg["mode"] = "custom"
+        self._mode_var.set("custom")
+        # Langsung simpan ke file agar generate langsung bisa pakai
+        save_prompt_config(self._cfg)
+        self._refresh_list(select_idx=idx)
+        prompts = self._cfg.get("prompts", [])
+        lbl = prompts[idx].get("label", f"Prompt {idx+1}") if prompts else ""
+        self._status_var.set(f"✅ Aktif & Tersimpan: {lbl}")
+        self._on_mode_change()
+
+    def _fill_example(self):
+        self._tpl_text.config(state="normal")
+        self._tpl_text.delete("1.0", "end")
+        self._tpl_text.insert("1.0", self.EXAMPLE_TEMPLATE)
+        self._mark_dirty()
+
+    # ── Mode toggle ─────────────────────────────────────────────────────────
+    def _on_mode_change(self):
+        mode  = self._mode_var.get()
+        state = "normal" if mode == "custom" else "disabled"
+        for w in (self._sys_text, self._tpl_text, self._label_entry,
+                  self._set_active_btn):
+            try:
+                w.config(state=state)
+            except Exception:
+                pass
+
+    # ── Save / Close ─────────────────────────────────────────────────────────
+    def _save_all(self):
+        # Selalu simpan editor aktif ke cfg dulu
+        self._auto_save_current()
+        self._cfg["mode"] = self._mode_var.get()
+        save_prompt_config(self._cfg)
+        mode_lbl = "Default" if self._cfg["mode"] == "default" else (
+            self._cfg.get("prompts", [{}])[
+                int(self._cfg.get("active_index", 0))
+            ].get("label", "Custom"))
+        self._status_var.set(f"✅ Tersimpan — Mode: {mode_lbl}")
+        self._dirty = False
+        self._refresh_list(select_idx=self._current_idx())
+
+    def _on_close(self):
+        if self._dirty:
+            if messagebox.askyesno("Keluar", "Ada perubahan belum disimpan.\nSimpan sekarang?", parent=self):
+                self._save_all()
+            else:
+                self.destroy()
+                return
+        self.destroy()
 
 class AISettingsDialog(tk.Toplevel):
     PRESETS = {
@@ -321,8 +642,10 @@ class GenerateDialog(tk.Toplevel):
         _lsf.grid(row=7, column=1, sticky="w")
         ttk.Radiobutton(_lsf, text="OpenRouter / API",
                         variable=self.lyric_source_var, value="api").pack(side="left", padx=(0,10))
-        ttk.Radiobutton(_lsf, text="DeepSeek Web (browser, gratis - login dulu)",
-                        variable=self.lyric_source_var, value="deepseek_web").pack(side="left")
+        ttk.Radiobutton(_lsf, text="DeepSeek Full (browser, gratis - login dulu)",
+                        variable=self.lyric_source_var, value="deepseek_web").pack(side="left", padx=(0,8))
+        ttk.Radiobutton(_lsf, text="DeepSeek Mini ⚡ (verse+outro only)",
+                        variable=self.lyric_source_var, value="deepseek_web_mini").pack(side="left")
 
         # ── Footer fixed ──
         ttk.Separator(self).pack(fill="x")
@@ -479,8 +802,10 @@ class BulkCreateDialog(tk.Toplevel):
         _blsf.grid(row=4, column=1, sticky="w")
         ttk.Radiobutton(_blsf, text="OpenRouter / API",
                         variable=self.lyric_source_var, value="api").pack(side="left", padx=(0,10))
-        ttk.Radiobutton(_blsf, text="DeepSeek Web (browser, gratis - login dulu)",
-                        variable=self.lyric_source_var, value="deepseek_web").pack(side="left")
+        ttk.Radiobutton(_blsf, text="DeepSeek Full (browser, gratis - login dulu)",
+                        variable=self.lyric_source_var, value="deepseek_web").pack(side="left", padx=(0,8))
+        ttk.Radiobutton(_blsf, text="DeepSeek Mini ⚡ (verse+outro only)",
+                        variable=self.lyric_source_var, value="deepseek_web_mini").pack(side="left")
 
         # ── Preview treeview ──
         cols = ("name","credit","can_create","dapat","status")
@@ -681,10 +1006,16 @@ async def _generate_one_song(context, song_config: dict, song_index: int, total:
     _style_lower = style.lower() if style else ""
     _is_lofi_skip = any(kw in _style_lower for kw in [
         "lofi", "lo-fi", "lo fi", "chillhop", "chill hop", "study beats", "chill beats",
-        "relaxing study", "rain ambiance", "vinyl crackle", "tape saturation"
+        "relaxing study", "rain ambiance", "vinyl crackle", "tape saturation",
+        # Genre Indonesia: lirik pendek/Jawa diperbolehkan
+        "campursari", "campur sari", "langgam jawa", "langgam", "tembang jawa",
+        "gamelan", "sinden", "karawitan", "gending"
     ])
-    _min_skip = 200 if _is_lofi_skip else MIN_LYRICS_CHARS
-    if not song_config.get("instrumental") and len(lyrics) < _min_skip:
+    # Jika custom prompt aktif, user kontrol panjang sendiri → pakai minimum 100 char
+    _is_custom_prompt = bool(get_active_prompt())
+    _is_mini_skip = song_config.get("lyric_source") == "deepseek_web_mini"
+    _min_skip = 0 if _is_mini_skip else (100 if _is_custom_prompt else (200 if _is_lofi_skip else MIN_LYRICS_CHARS))
+    if _min_skip > 0 and not song_config.get("instrumental") and len(lyrics) < _min_skip:
         log_cb(
             f"  [SKIP] Lirik hanya {len(lyrics)} karakter < {_min_skip} minimum.\n"
             f"  [SKIP] Lagu ini di-skip untuk hemat kredit Suno.\n"
@@ -826,83 +1157,49 @@ async def _generate_one_song(context, song_config: dict, song_index: int, total:
         log_cb("  SKIP: Style tidak terisi")
         return None
 
-    # ── Klik More Options agar Song Title (Optional) muncul ────────────
-    _mo_clicked = False
-    try:
-        for _mo_sel in [
-            "button:has-text('More Options')",
-            "details > summary",
-            "[data-testid*='more-options' i]",
-            "summary",
-        ]:
-            try:
-                _mo = await page.wait_for_selector(_mo_sel, timeout=3000, state="visible")
-                if _mo:
-                    await _mo.click()
-                    await asyncio.sleep(0.5)  # FIX: dipercepat
-                    _mo_clicked = True
-                    log_cb("  OK: More Options dibuka")
-                    break
-            except Exception:
-                continue
-    except Exception:
-        pass
-
-    # ── Isi Song Title (Optional) dari DeepSeek ────────────────────────
+    # ── Isi Song Title — v5.45: scroll bawah + JS langsung ────────────
+    # Tidak ada selector hunting, tidak ada More Options, tidak ada wait.
+    # Scroll mentok bawah → JS cari & isi input title seketika.
     _title_filled = False
     try:
-        # Tambah jeda setelah More Options agar field benar-benar visible
-        if _mo_clicked:
-            await asyncio.sleep(0.3)  # FIX: dipercepat
+        # Scroll mentok bawah supaya semua elemen (termasuk More Options area) ter-render
+        await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+        await asyncio.sleep(0.3)
 
-        for _tsel in [
-            "input[placeholder*='Song Title' i]",
-            "input[placeholder*='Title' i]",
-            "input[placeholder*='Optional' i]",
-            "input[placeholder*='Song name' i]",
-            "input[aria-label*='title' i]",
-            "input[data-testid*='title' i]",
-        ]:
-            try:
-                _tinp = await page.wait_for_selector(_tsel, timeout=3000, state="visible")
-                if _tinp:
-                    await _tinp.scroll_into_view_if_needed()
-                    await asyncio.sleep(0.3)
-                    await _tinp.click()
-                    await asyncio.sleep(0.2)
-                    await _tinp.triple_click()
-                    await js_set_value(_tinp, title)
-                    _title_filled = True
-                    log_cb(f"  OK: Title = {title}")
-                    break
-            except Exception:
-                continue
+        # JS langsung: cari input yang punya placeholder/aria mengandung title/optional
+        _js_title = await page.evaluate(r"""(titleVal) => {
+            const kws = ['title', 'song title', 'optional', 'song name'];
+            const inputs = Array.from(document.querySelectorAll('input[type="text"], input:not([type])'));
+            for (const inp of inputs) {
+                const ph  = (inp.placeholder || '').toLowerCase();
+                const lbl = (inp.getAttribute('aria-label') || '').toLowerCase();
+                const nm  = (inp.name || '').toLowerCase();
+                const hit = kws.some(k => ph.includes(k) || lbl.includes(k) || nm.includes(k));
+                if (hit) {
+                    inp.scrollIntoView({behavior:'instant', block:'center'});
+                    inp.focus();
+                    inp.click();
+                    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+                        window.HTMLInputElement.prototype, 'value').set;
+                    nativeInputValueSetter.call(inp, titleVal);
+                    inp.dispatchEvent(new Event('input', {bubbles:true}));
+                    inp.dispatchEvent(new Event('change', {bubbles:true}));
+                    return inp.value;
+                }
+            }
+            return null;
+        }""", title)
 
-        # Fallback: scan semua input cari yang punya placeholder title/optional
-        if not _title_filled:
-            for inp in await page.query_selector_all("input"):
-                ph  = (await inp.get_attribute("placeholder") or "").lower()
-                lbl = (await inp.get_attribute("aria-label") or "").lower()
-                nm  = (await inp.get_attribute("name") or "").lower()
-                if any(kw in x for kw in ["title","song","optional"] for x in [ph, lbl, nm]):
-                    try:
-                        await inp.scroll_into_view_if_needed()
-                        await asyncio.sleep(0.2)
-                        await inp.click()
-                        await js_set_value(inp, title)
-                        _title_filled = True
-                        log_cb(f"  OK: Title (fallback scan) = {title}")
-                        break
-                    except Exception:
-                        continue
-
-        if not _title_filled:
-            log_cb(f"  INFO: Song Title input tidak ditemukan — Suno auto-generate judul")
+        if _js_title:
+            _title_filled = True
+            log_cb(f"  OK: Title = {_js_title}")
+        else:
+            log_cb(f"  INFO: Title input tidak ditemukan — Suno akan auto-generate judul")
             log_cb(f"  INFO: Nama FILE tetap pakai judul DeepSeek: {title}")
     except Exception as _te:
-        log_cb(f"  INFO: Title skip (field belum muncul): {_te.__class__.__name__}")
+        log_cb(f"  INFO: Title skip: {_te.__class__.__name__}")
 
-    await asyncio.sleep(0.8)
+    await asyncio.sleep(0.3)
     if is_stop_requested():
         return None
 
@@ -933,8 +1230,10 @@ async def _generate_one_song(context, song_config: dict, song_index: int, total:
     if clicked:
         # PATCH: re-check captcha setelah klik Create
         # CF Turnstile/hCaptcha kadang muncul SETELAH form submit
+        # Cloudflare butuh 5-15 detik untuk evaluasi sebelum tampilkan CAPTCHA
         import asyncio as _ac
-        await _ac.sleep(2)
+        log_cb(f"  [CAPTCHA-WATCH] Menunggu 10 detik — Cloudflare evaluasi request...")
+        await _ac.sleep(10)
         _profile_name_local = song_config.get("profile_name", "")
         captcha_after = await _check_and_handle_captcha(page, log_cb, _profile_name_local)
         if not captcha_after:
@@ -942,6 +1241,15 @@ async def _generate_one_song(context, song_config: dict, song_index: int, total:
                 f"  [CAPTCHA] Captcha muncul setelah Create di lagu {song_index}. "
                 f"Lagu mungkin tidak tergenerate — lanjut ke berikutnya."
             )
+        else:
+            # Jika tidak ada captcha, cek sekali lagi 5 detik kemudian (false-negative prevention)
+            await _ac.sleep(5)
+            captcha_recheck = await _check_and_handle_captcha(page, log_cb, _profile_name_local)
+            if not captcha_recheck:
+                log_cb(
+                    f"  [CAPTCHA] CAPTCHA muncul terlambat di lagu {song_index} (deteksi lapis-2). "
+                    f"Lanjut ke berikutnya."
+                )
     if not clicked:
         log_cb("  WARNING: Create button tidak ditemukan")
         try:
@@ -966,8 +1274,9 @@ def run_generate(chrome_path: str, profile_dir: str, config: dict, log_cb, done_
     profile_dir = resolve_profile_dir(profile_dir)  # FIX portable path
     import asyncio
     lyric_source = config.get("lyric_source", "api")  # "api" | "deepseek_web"
-    if lyric_source == "deepseek_web":
-        log_cb("\n[DS-WEB] Mode DeepSeek Web aktif - lirik digenerate via browser.")
+    if lyric_source in ("deepseek_web", "deepseek_web_mini"):
+        _mini_label = " (Mini ⚡)" if lyric_source == "deepseek_web_mini" else ""
+        log_cb(f"\n[DS-WEB] Mode DeepSeek Web{_mini_label} aktif - lirik digenerate via browser.")
         log_cb("[DS-WEB] Pastikan sudah login chat.deepseek.com di profil Chrome ini!")
         songs = []
     else:
@@ -1037,8 +1346,10 @@ async def _async_generate(chrome_path, profile_dir, config, songs, log_cb, done_
             return
 
         # DeepSeek Web: generate lirik setelah browser terbuka
-        if config.get("lyric_source") == "deepseek_web":
-            log_cb("[DS-WEB] Browser siap. Membuka DeepSeek untuk generate lirik...")
+        if config.get("lyric_source") in ("deepseek_web", "deepseek_web_mini"):
+            _mini_mode = config.get("lyric_source") == "deepseek_web_mini"
+            _label = " Mini ⚡" if _mini_mode else ""
+            log_cb(f"[DS-WEB] Browser siap. Membuka DeepSeek{_label} untuk generate lirik...")
             _ds_timeout = config.get("deepseek_web_timeout", 120)
             songs = await _deepseek_web_prepare_songs(context, config, log_cb, _ds_timeout)
             if not songs:
@@ -1877,14 +2188,60 @@ async def _check_and_handle_captcha(page, log_cb, profile_name: str = "") -> boo
         except Exception:
             pass
 
-    # Lapis 5: frame_locator masuk ke iframe Cloudflare
+    # Lapis 5: frame_locator masuk ke iframe Cloudflare — cek teks + checkbox Turnstile
     if not captcha_found:
         try:
             _cf_frame = page.frame_locator("iframe[src*='challenges.cloudflare.com' i]").first
+            # Cek teks "verify you are human"
             _btn = _cf_frame.locator("text=verify you are human").first
             if await _btn.count() > 0 and await _btn.is_visible(timeout=500):
                 captcha_found = True
-                log_cb("  [CAPTCHA] Terdeteksi via frame_locator Cloudflare")
+                log_cb("  [CAPTCHA] Terdeteksi via frame_locator (teks verify human)")
+        except Exception:
+            pass
+
+    # Lapis 6: frame_locator — cek checkbox Turnstile dan klik otomatis
+    if not captcha_found:
+        try:
+            _cf_frame2 = page.frame_locator("iframe[src*='challenges.cloudflare.com' i]").first
+            _checkbox = _cf_frame2.locator("input[type='checkbox']").first
+            if await _checkbox.count() > 0 and await _checkbox.is_visible(timeout=1000):
+                captcha_found = True
+                log_cb("  [CAPTCHA] Turnstile checkbox terdeteksi — mencoba klik otomatis...")
+                try:
+                    await _checkbox.click(timeout=3000)
+                    log_cb("  [CAPTCHA] ✅ Checkbox Turnstile diklik otomatis!")
+                    await asyncio.sleep(3)
+                    # Verifikasi apakah captcha sudah hilang setelah klik
+                    _still = await page.query_selector("iframe[src*='challenges.cloudflare.com' i]")
+                    if not _still:
+                        log_cb("  [CAPTCHA] ✅ Captcha selesai otomatis!")
+                        captcha_found = False  # Reset — captcha sudah selesai
+                except Exception as _ck_err:
+                    log_cb(f"  [CAPTCHA] Auto-klik gagal: {_ck_err} — menunggu user solve manual")
+        except Exception:
+            pass
+
+    # Lapis 7: frame_locator — cek via label/span "Verify you are human"
+    if not captcha_found:
+        try:
+            for _iframe_sel in [
+                "iframe[src*='challenges.cloudflare.com' i]",
+                "iframe[src*='hcaptcha.com' i]",
+                "iframe[title*='challenge' i]",
+            ]:
+                _frm = page.frame_locator(_iframe_sel).first
+                for _lbl in ["label", "span", "div"]:
+                    try:
+                        _el = _frm.locator(f"{_lbl}:has-text('verify')").first
+                        if await _el.count() > 0 and await _el.is_visible(timeout=300):
+                            captcha_found = True
+                            log_cb(f"  [CAPTCHA] Terdeteksi via frame_locator lapis-7 ({_iframe_sel[:40]})")
+                            break
+                    except Exception:
+                        pass
+                if captcha_found:
+                    break
         except Exception:
             pass
 
